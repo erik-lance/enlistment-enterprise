@@ -1,0 +1,96 @@
+target/
+!.mvn/wrapper/maven-wrapper.jar
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.metadata/
+*.class
+*/bin/
+*/*/bin
+*/*/bin/
+*/bin/
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+
+### NetBeans ###
+nbproject/private/
+build/
+nbbuild/
+dist/
+nbdist/
+.nb-gradle/
+
+
+### HSQL ###
+mem.lck
+mem.properties
+mem.log
+mem.script
+/bin/
+
+### generated files ###
+testfiles/
+edusuite-webapp/src/main/resources/static/css-gen/
+*.ods
+
+### not needed files ###
+*.php
+*.orig
+*.log
+*.jasper
+.sonarlint/
+trash/
+
+### robot framework output files ###
+*selenium-screenshot*.png
+log.html
+report.html
+output.xml
+
+
+## ANGULAR ##
+
+# compiled output
+tmp/
+out-tsc/
+**/web/package-lock.json
+
+# dependencies
+node_modules/
+
+# IDE - VSCode
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# misc
+.sass-cache
+connect.lock
+coverage/
+libpeerconnection.log
+npm-debug.log
+yarn-error.log
+testem.log
+typings/
+
+# System Files
+.DS_Store
+Thumbs.db
+
+*testfiles*
+
+.recommenders
+MANIFEST.MF
+
+*.tgz
