@@ -35,8 +35,10 @@ class Student {
 
     void cancel(Section section) {
         notNull(section);
-        sections.remove(section);
-        section.decrementNumberOfStudents();
+        if (sections.contains(section)) {
+            sections.remove(section);
+            section.decrementNumberOfStudents();
+        }
     }
 
     Collection<Section> getSections() {

@@ -135,7 +135,7 @@ class StudentTest {
     }
 
     @Test
-    void cancel() {
+    void cancel_enlisted_section() {
         // Given a student that has sections, which have students
         final int INITIAL_NUMBER_OF_STUDENTS = 5;
         Section sec1 = new Section("A", new Schedule(MTH, H0830), new Room("X", 10), INITIAL_NUMBER_OF_STUDENTS);
@@ -152,6 +152,27 @@ class StudentTest {
                     final int DECREMENTED_NUMBER_OF_STUDENTS = 4;
                     assertEquals(DECREMENTED_NUMBER_OF_STUDENTS, sectionToBeCanceled.getNumberOfStudents());
                 }
+        );
+    }
+
+    @Test
+    void cancel_nonenlisted_section() {
+        // Given a student that has sections, which have students, and one section that the student hasn't enlisted in
+        final int INITIAL_NUMBER_OF_STUDENTS = 5;
+        Section sec1 = new Section("A", new Schedule(MTH, H0830), new Room("X", 10), INITIAL_NUMBER_OF_STUDENTS);
+        Section sec2 = new Section("B", new Schedule(TF, H0830), new Room("Y", 10), INITIAL_NUMBER_OF_STUDENTS);
+        Section sectionToBeCanceled = new Section("C", new Schedule(WS, H0830), new Room("Z", 10), INITIAL_NUMBER_OF_STUDENTS);
+        Student student = new Student(1, List.of(sec1, sec2));
+        // When a student cancels a section that the student hasn't enlisted in
+        student.cancel(sectionToBeCanceled);
+        // The system will do nothing, student's sections unchanged, number of students of sections unchanged
+        Collection<Section> sections = student.getSections();
+        assertAll(
+                () -> assertTrue(sections.containsAll(List.of(sec1, sec2))),
+                () -> assertFalse(sections.contains(sectionToBeCanceled)),
+                () -> assertEquals(2, sections.size()),
+                () -> assertEquals(INITIAL_NUMBER_OF_STUDENTS, sec1.getNumberOfStudents()),
+                () -> assertEquals(INITIAL_NUMBER_OF_STUDENTS, sec2.getNumberOfStudents())
         );
     }
 
