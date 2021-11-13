@@ -12,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class StudentTest {
 
     @Test
-    void enlist_two_section_no_conflict() {
+    void enlist_two_sections_no_conflict() {
         // Given a student and two sections
         Student student = new Student(1);
         Section sec1 = new Section("A", new Subject("C"), new Schedule(MTH, H0830), new Room("X", 10));
@@ -175,5 +175,18 @@ class StudentTest {
                 () -> assertEquals(INITIAL_NUMBER_OF_STUDENTS, sec2.getNumberOfStudents())
         );
     }
+
+    @Test // happy path is enlist_two_sections_no_conflict()
+    void enlist_two_sections_same_subject() {
+        // Given student & 2 sections same subject
+        Student student = new Student(1);
+        Section sec1 = new Section("A", new Subject("C"), new Schedule(MTH, H0830), new Room("X", 10));
+        Section sec2 = new Section("A", new Subject("C"), new Schedule(TF, H0830), new Room("Y", 10));
+        // When student enlists in both
+        student.enlist(sec1);
+        // Then exception should be thrown in 2nd
+        assertThrows(SameSubjectException.class, () -> student.enlist(sec2));
+    }
+
 
 }

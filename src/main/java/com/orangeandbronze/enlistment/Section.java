@@ -42,6 +42,10 @@ class Section {
                             this + " and new section " + other +
                             " at schedule " + this.schedule);
         }
+        if (this.subject.equals(other.subject)) {
+            throw new SameSubjectException("This section " + this + " & other section " + other +
+                    " have same subject of " + subject);
+        }
     }
 
     int getNumberOfStudents() {
