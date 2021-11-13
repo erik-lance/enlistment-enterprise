@@ -21,5 +21,5 @@
 - [X] A section has a subject. (just 1 subject, not 'block section')
 - [X] A subject is identified by its alphanumeric Subject ID.
 - [X] A student cannot enlist in two sections with the same subject.
-- [ ] A subject may or may not have one or more prerequisite subjects.
+- [X] A subject may or may not have one or more prerequisite subjects.
 - [ ] A student may not enlist in a section if the student has not yet taken the prerequisite subjects.
