@@ -15,8 +15,8 @@ class StudentTest {
     void enlist_two_section_no_conflict() {
         // Given a student and two sections
         Student student = new Student(1);
-        Section sec1 = new Section("A", new Schedule(MTH, H0830), new Room("X", 10));
-        Section sec2 = new Section("B", new Schedule(TF, H1000), new Room("Y", 10));
+        Section sec1 = new Section("A", new Subject(), new Schedule(MTH, H0830), new Room("X", 10));
+        Section sec2 = new Section("B", new Subject(), new Schedule(TF, H1000), new Room("Y", 10));
         // When the student enlists in both sections
         student.enlist(sec1);
         student.enlist(sec2);
@@ -32,8 +32,8 @@ class StudentTest {
     void enlist_two_sections_same_schedule() {
         // Given a student & two sections w/ same sked
         Student student = new Student(1);
-        Section sec1 = new Section("A", new Schedule(MTH, H0830), new Room("X", 10));
-        Section sec2 = new Section("B", new Schedule(MTH, H0830), new Room("Y", 10));
+        Section sec1 = new Section("A", new Subject(), new Schedule(MTH, H0830), new Room("X", 10));
+        Section sec2 = new Section("B", new Subject(), new Schedule(MTH, H0830), new Room("Y", 10));
         // When the student enlists in both sections
         student.enlist(sec1);
         // Then an exception should be thrown on the second enlistment
@@ -47,7 +47,7 @@ class StudentTest {
         Student student2 = new Student(2);
         final int CAPACITY = 5;
         Room room =  new Room("X", CAPACITY);
-        Section section = new Section("A", new Schedule(MTH, H0830), room);
+        Section section = new Section("A", new Subject(), new Schedule(MTH, H0830), room);
         // When the two students enlist in the section
         student1.enlist(section);
         student2.enlist(section);
@@ -62,7 +62,7 @@ class StudentTest {
         Student student2 = new Student(2);
         final int CAPACITY = 1;
         Room room =  new Room("X", CAPACITY);
-        Section section = new Section("A", new Schedule(MTH, H0830), room);
+        Section section = new Section("A", new Subject(), new Schedule(MTH, H0830), room);
         // When the two students enlist in the section
         student1.enlist(section);
         // Then an exception should be thrown at 2nd enlistment
@@ -74,8 +74,8 @@ class StudentTest {
         // Given 2 sections that share same room w/ capacity 1, and 2 students
         final int CAPACITY = 1;
         Room room = new Room("X", CAPACITY);
-        Section sec1 = new Section("A", new Schedule(MTH, H0830), room);
-        Section sec2 = new Section("B", new Schedule(TF, H0830), room);
+        Section sec1 = new Section("A", new Subject(), new Schedule(MTH, H0830), room);
+        Section sec2 = new Section("B", new Subject(), new Schedule(TF, H0830), room);
         Student student1 = new Student(1);
         Student student2 = new Student(2);
         // When each student enlists in a different section
@@ -93,7 +93,7 @@ class StudentTest {
             Student student3 = new Student(3);
             Student student4 = new Student(4);
             Student student5 = new Student(5);
-            Section section = new Section("X", new Schedule(MTH, H0830), new Room("Y", 1));
+            Section section = new Section("X", new Subject(), new Schedule(MTH, H0830), new Room("Y", 1));
             // When they enlist concurrently
             CountDownLatch latch = new CountDownLatch(1);
             new EnslistmentThread(student1, section, latch).start();
@@ -138,9 +138,9 @@ class StudentTest {
     void cancel_enlisted_section() {
         // Given a student that has sections, which have students
         final int INITIAL_NUMBER_OF_STUDENTS = 5;
-        Section sec1 = new Section("A", new Schedule(MTH, H0830), new Room("X", 10), INITIAL_NUMBER_OF_STUDENTS);
-        Section sec2 = new Section("B", new Schedule(TF, H0830), new Room("Y", 10), INITIAL_NUMBER_OF_STUDENTS);
-        Section sectionToBeCanceled = new Section("C", new Schedule(WS, H0830), new Room("Z", 10), INITIAL_NUMBER_OF_STUDENTS);
+        Section sec1 = new Section("A", new Subject(), new Schedule(MTH, H0830), new Room("X", 10), INITIAL_NUMBER_OF_STUDENTS);
+        Section sec2 = new Section("B", new Subject(), new Schedule(TF, H0830), new Room("Y", 10), INITIAL_NUMBER_OF_STUDENTS);
+        Section sectionToBeCanceled = new Section("C", new Subject(), new Schedule(WS, H0830), new Room("Z", 10), INITIAL_NUMBER_OF_STUDENTS);
         Student student = new Student(1, List.of(sec1, sec2, sectionToBeCanceled));
         // When the student cancels one section
         student.cancel(sectionToBeCanceled);
@@ -159,9 +159,9 @@ class StudentTest {
     void cancel_nonenlisted_section() {
         // Given a student that has sections, which have students, and one section that the student hasn't enlisted in
         final int INITIAL_NUMBER_OF_STUDENTS = 5;
-        Section sec1 = new Section("A", new Schedule(MTH, H0830), new Room("X", 10), INITIAL_NUMBER_OF_STUDENTS);
-        Section sec2 = new Section("B", new Schedule(TF, H0830), new Room("Y", 10), INITIAL_NUMBER_OF_STUDENTS);
-        Section sectionToBeCanceled = new Section("C", new Schedule(WS, H0830), new Room("Z", 10), INITIAL_NUMBER_OF_STUDENTS);
+        Section sec1 = new Section("A", new Subject(), new Schedule(MTH, H0830), new Room("X", 10), INITIAL_NUMBER_OF_STUDENTS);
+        Section sec2 = new Section("B", new Subject(), new Schedule(TF, H0830), new Room("Y", 10), INITIAL_NUMBER_OF_STUDENTS);
+        Section sectionToBeCanceled = new Section("C", new Subject(), new Schedule(WS, H0830), new Room("Z", 10), INITIAL_NUMBER_OF_STUDENTS);
         Student student = new Student(1, List.of(sec1, sec2));
         // When a student cancels a section that the student hasn't enlisted in
         student.cancel(sectionToBeCanceled);

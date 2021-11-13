@@ -18,7 +18,7 @@
 - [X] Avoid race condition when where number of students may exceed section capacity when multiple students enlist at the same time.
   Make sure lock is held for the minimum amount of time.
 - [X] Student can cancel an enlisted section
-- [ ] A section has a subject. (just 1 subject, not 'block section')
+- [X] A section has a subject. (just 1 subject, not 'block section')
 - [ ] A subject is identified by its alphanumeric Subject ID.
 - [ ] A student cannot enlist in two sections with the same subject.
 - [ ] A subject may or may not have one or more prerequisite subjects.

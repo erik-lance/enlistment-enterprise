@@ -8,25 +8,28 @@ import static org.apache.commons.lang3.Validate.*;
 class Section {
 
     private final String sectionId;
+    private final Subject subject;
     private final Schedule schedule;
     private final Room room;
     private int numberOfStudents;
     private final ReentrantLock lock = new ReentrantLock();
 
-    Section(String sectionId, Schedule schedule, Room room) {
+    Section(String sectionId, Subject subject, Schedule schedule, Room room) {
         notBlank(sectionId,
                 "sectionId can't be null, empty or whitespace ");
+        notNull(subject);
         isTrue(isAlphanumeric(sectionId),
                 "sectionId must be alphanumeric, was: "
                         + sectionId);
         notNull(room);
         this.sectionId = sectionId;
+        this.subject = subject;
         this.schedule = schedule;
         this.room = room;
     }
 
-    Section(String sectionId, Schedule schedule, Room room, int numberOfStudents) {
-        this(sectionId, schedule, room);
+    Section(String sectionId, Subject subject, Schedule schedule, Room room, int numberOfStudents) {
+        this(sectionId, subject, schedule, room);
         isTrue(numberOfStudents >= 0,
                 "numberOfStudents must be non-negative, was: " + numberOfStudents);
         this.numberOfStudents = numberOfStudents;
