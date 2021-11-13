@@ -7,23 +7,32 @@ class Student {
 
     private final int studentNumber;
     private final Collection<Section> sections = new HashSet<>();
+    private final Collection<Subject> subjectsTaken = new HashSet<>();
 
-    Student(int studentNumber, Collection<Section> sections) {
+    Student(int studentNumber, Collection<Section> sections, Collection<Subject> subjectsTaken) {
         isTrue (studentNumber >= 0,
                 "studentNumber can't be negative, was: " + studentNumber);
         notNull(sections, "sections can't be null");
+        notNull(subjectsTaken);
         this.studentNumber = studentNumber;
         this.sections.addAll(sections);
         this.sections.removeIf(Objects::isNull);
+        this.subjectsTaken.addAll(subjectsTaken);
+        this.subjectsTaken.removeIf(Objects::isNull);
     }
 
     Student(int studentNumber) {
-        this(studentNumber, Collections.emptyList());
+        this(studentNumber, Collections.emptyList(), Collections.emptyList());
+    }
+
+    Student(int studentNumber, Collection<Section> sections) {
+        this(studentNumber, sections, Collections.emptyList());
     }
 
     void enlist(Section newSection) {
         notNull(newSection,"section can't be null") ;
         sections.forEach(currSection -> currSection.checkForConflict(newSection) );
+        newSection.checkPrereqs(subjectsTaken);
         newSection.lock(); // one thread at a time... this only works if single app instance
         try {
             newSection.incrementNumberOfStudents();

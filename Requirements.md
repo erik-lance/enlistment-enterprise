@@ -22,4 +22,4 @@
 - [X] A subject is identified by its alphanumeric Subject ID.
 - [X] A student cannot enlist in two sections with the same subject.
 - [X] A subject may or may not have one or more prerequisite subjects.
-- [ ] A student may not enlist in a section if the student has not yet taken the prerequisite subjects.
+- [X] A student may not enlist in a section if the student has not yet taken the prerequisite subjects.

@@ -23,6 +23,17 @@ class Subject {
         this(subjectId, Collections.emptyList());
     }
 
+    void checkPrereqs(Collection<Subject> subjectsTaken) {
+        notNull(subjectsTaken);
+        Collection<Subject> copySubjectsTaken = new HashSet<>(subjectsTaken); // sets are quicker to search through
+        if (!copySubjectsTaken.containsAll(prerequisites)) {
+            Collection<Subject> copyOfPrereqs = new HashSet<>(prerequisites);
+            copyOfPrereqs.removeAll(copySubjectsTaken);
+            throw new PrereqMissingException(
+                    "missing prereqs: " + copyOfPrereqs);
+        }
+    }
+
     @Override
     public String toString() {
         return subjectId;

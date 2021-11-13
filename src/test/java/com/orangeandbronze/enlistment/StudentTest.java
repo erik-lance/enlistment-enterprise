@@ -188,5 +188,41 @@ class StudentTest {
         assertThrows(SameSubjectException.class, () -> student.enlist(sec2));
     }
 
+    @Test
+    void enlist_section_prereqs_taken() {
+        // Given section & student where prereqs taken
+        Subject prereq1 = new Subject("prereq1");
+        Subject prereq2 = new Subject("prereq2");
+        Subject subject = new Subject("subject", List.of(prereq1, prereq2));
+        Subject otherSubject = new Subject("otherSubject");
+        List<Subject> subjectsTaken = List.of(prereq1, prereq2, otherSubject);
+        Student student = new Student(1, Collections.emptyList(), subjectsTaken);
+        Section section = new Section("section", subject, new Schedule(MTH, H0830), new Room("room", 10));
+        // When student enlists
+        student.enlist(section);
+        // Then enlistment is successful
+        assertAll(
+                () -> assertTrue(student.getSections().contains(section)),
+                () -> assertEquals(1, section.getNumberOfStudents())
+        );
+    }
+
+    @Test
+    void enlist_section_prereq_missing() {
+        // Given section & student where some prereqs missing
+        Subject prereq1 = new Subject("prereq1");
+        Subject prereq2 = new Subject("prereq2");
+        Subject prereq3 = new Subject("prereq3");
+        Subject prereq4 = new Subject("prereq4");
+        Subject subject = new Subject("subject", List.of(prereq1, prereq2, prereq3, prereq4));
+        Subject otherSubject = new Subject("otherSubject");
+        List<Subject> subjectsTaken = List.of(prereq1, prereq2, otherSubject);
+        Student student = new Student(1, Collections.emptyList(), subjectsTaken);
+        Section section = new Section("section", subject, new Schedule(MTH, H0830), new Room("room", 10));
+        // When student enlists
+        // Then exception thrown
+        assertThrows(PrereqMissingException.class, () -> student.enlist(section));
+    }
+
 
 }

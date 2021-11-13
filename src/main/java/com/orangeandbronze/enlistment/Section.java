@@ -1,5 +1,6 @@
 package com.orangeandbronze.enlistment;
 
+import java.util.*;
 import java.util.concurrent.locks.*;
 
 import static org.apache.commons.lang3.StringUtils.*;
@@ -59,6 +60,12 @@ class Section {
 
     public void decrementNumberOfStudents() {
         numberOfStudents--;
+    }
+
+    void checkPrereqs(Collection<Subject> subjectsTaken) {
+        notNull(subjectsTaken);
+        Collection<Subject> copy = new HashSet<>(subjectsTaken); // sets are quicker to search through
+        subject.checkPrereqs(copy);
     }
 
     /** Locks this object's ReentrantLock **/
