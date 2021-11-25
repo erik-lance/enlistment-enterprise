@@ -37,12 +37,7 @@ class Section {
     }
 
     void checkForConflict(Section other) {
-        if (this.schedule.equals(other.schedule)) {
-            throw new ScheduleConflictException(
-                    "schedule conflict between current section " +
-                            this + " and new section " + other +
-                            " at schedule " + this.schedule);
-        }
+        this.schedule.checkOverlap(other.schedule);
         if (this.subject.equals(other.subject)) {
             throw new SameSubjectException("This section " + this + " & other section " + other +
                     " have same subject of " + subject);

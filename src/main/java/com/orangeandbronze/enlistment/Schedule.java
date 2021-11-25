@@ -13,6 +13,12 @@ class Schedule {
         this.period = period;
     }
 
+    void checkOverlap(Schedule other) {
+        if (this.days.equals(other.days)) {
+            this.period.checkOverlap(other.period);
+        }
+    }
+
     @Override
     public String toString() {
         return days + " " + period;

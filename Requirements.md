@@ -25,7 +25,7 @@
 - [X] A student may not enlist in a section if the student has not yet taken the prerequisite subjects.
 
 ## Change Request   
-- [ ] A student may not enlist in a section if its schedule overlaps with the schedule of any of its currently enlisted sections.
+- [X] A student may not enlist in a section if its schedule overlaps with the schedule of any of its currently enlisted sections.
 - [X] Periods may be of any duration of 30-min increments, w/in the hours of 8:30am - 5:30pm.
 - [X] Periods may begin and may end at the top of each hour (9:00, 10:00, 11:00...) or at the bottom of each hour (9:30, 10:30, 11:30...).
 - [X] End of a period may not be on or before the start of the period.

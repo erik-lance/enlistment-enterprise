@@ -30,6 +30,12 @@ class Period {
         }
     }
 
+    void checkOverlap(Period other) {
+        if (this.startTime.isBefore(other.endTime) && this.endTime.isAfter(other.startTime)) {
+            throw new ScheduleConflictException("Period overlap between this: " + this + " & other: " + other);
+        }
+    }
+
     @Override
     public String toString() {
         return startTime + " - " + endTime;

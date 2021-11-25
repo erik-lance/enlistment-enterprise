@@ -6,14 +6,18 @@ repositories {
     mavenCentral()
 }
 
+val junitVersion = "5.8.1"
+
 dependencies {
     // https://mvnrepository.com/artifact/org.apache.commons/commons-lang3
     implementation("org.apache.commons:commons-lang3:3.12.0")
 
     // Use JUnit test framework
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.1")
-    //testImplementation("org.junit.jupiter:junit-jupiter-params:5.8.1")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:$junitVersion")
+    testImplementation("org.junit.jupiter:junit-jupiter-params:$junitVersion")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:$junitVersion")
+
+
 
 }
 
