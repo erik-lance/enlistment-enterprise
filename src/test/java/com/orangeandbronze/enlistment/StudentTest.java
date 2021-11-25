@@ -2,6 +2,7 @@ package com.orangeandbronze.enlistment;
 
 import org.junit.jupiter.api.*;
 
+import java.time.*;
 import java.util.*;
 import java.util.concurrent.*;
 
@@ -10,6 +11,9 @@ import static com.orangeandbronze.enlistment.Period.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 class StudentTest {
+
+    private final static Period H0830 = new Period(LocalTime.of(8, 30), LocalTime.of(10, 0));
+    private final static Period H1000 = new Period(LocalTime.of(10, 0), LocalTime.of(11, 30));
 
     @Test
     void enlist_two_sections_no_conflict() {

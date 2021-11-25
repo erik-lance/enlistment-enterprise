@@ -23,3 +23,25 @@
 - [X] A student cannot enlist in two sections with the same subject.
 - [X] A subject may or may not have one or more prerequisite subjects.
 - [X] A student may not enlist in a section if the student has not yet taken the prerequisite subjects.
+
+## Change Request   
+- [ ] A student may not enlist in a section if its schedule overlaps with the schedule of any of its currently enlisted sections.
+- [X] Periods may be of any duration of 30-min increments, w/in the hours of 8:30am - 5:30pm.
+- [X] Periods may begin and may end at the top of each hour (9:00, 10:00, 11:00...) or at the bottom of each hour (9:30, 10:30, 11:30...).
+- [X] End of a period may not be on or before the start of the period.
+  
+### Examples
+* Valid Periods:
+  * 8:30am - 9:00am
+  * 9:00am - 12:00nn
+  * 2:30pm - 4:30pm
+  * 9:00am - 10:30am
+* Invalid Periods:
+  * 8:45am - 10:15am
+    * Does not start at top or bottom of the hour
+  * 12:00pm - 12:02pm
+    * Not a 30 minute increment
+  * 4:00pm - 3:00pm
+    * Start time is after end time
+  * 4:30pm - 6:00pm
+    * End time is after 5:30pm
