@@ -45,3 +45,6 @@
     * Start time is after end time
   * 4:30pm - 6:00pm
     * End time is after 5:30pm
+    
+- [ ] Sections cannot have the same room if their schedules are overlapping.
+- [ ] Student should have firstname and lastname
