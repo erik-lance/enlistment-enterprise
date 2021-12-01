@@ -1,9 +1,13 @@
 package com.orangeandbronze.enlistment.domain;
 
+import javax.persistence.*;
+
 import static org.apache.commons.lang3.StringUtils.*;
 import static org.apache.commons.lang3.Validate.*;
 
+@Entity
 class Room {
+    @Id
     private final String roomName;
     private final int capacity;
 

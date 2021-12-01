@@ -1,18 +1,24 @@
 package com.orangeandbronze.enlistment.domain;
 
+import javax.persistence.*;
 import java.util.*;
 import java.util.concurrent.locks.*;
 
 import static org.apache.commons.lang3.StringUtils.*;
 import static org.apache.commons.lang3.Validate.*;
 
+@Entity
 class Section {
-
+    @Id
     private final String sectionId;
+    @ManyToOne
     private final Subject subject;
+    @Embedded
     private final Schedule schedule;
+    @ManyToOne
     private final Room room;
     private int numberOfStudents;
+    @Transient
     private final ReentrantLock lock = new ReentrantLock();
 
     Section(String sectionId, Subject subject, Schedule schedule, Room room) {

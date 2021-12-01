@@ -1,13 +1,15 @@
 package com.orangeandbronze.enlistment.domain;
 
+import javax.persistence.*;
 import java.util.*;
 
 import static org.apache.commons.lang3.StringUtils.isAlphanumeric;
 import static org.apache.commons.lang3.Validate.*;
-
+@Entity
 class Subject {
-
+    @Id
     private final String subjectId;
+    @ManyToMany
     private final Collection<Subject> prerequisites = new HashSet<>();
 
     Subject(String subjectId, Collection<Subject> prerequisites) {

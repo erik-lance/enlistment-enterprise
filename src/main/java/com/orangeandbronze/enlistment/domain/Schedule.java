@@ -1,9 +1,13 @@
 package com.orangeandbronze.enlistment.domain;
 
+import javax.persistence.*;
+
 import static org.apache.commons.lang3.Validate.notNull;
 
+@Embeddable
 class Schedule {
     private final Days days;
+    @Embedded
     private final Period period;
 
     Schedule(Days days, Period period) {

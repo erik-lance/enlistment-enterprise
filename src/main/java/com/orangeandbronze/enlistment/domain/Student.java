@@ -1,12 +1,15 @@
 package com.orangeandbronze.enlistment.domain;
 
+import javax.persistence.*;
 import java.util.*;
 import static org.apache.commons.lang3.Validate.*;
-
+@Entity
 class Student {
-
+    @Id
     private final int studentNumber;
+    @ManyToMany
     private final Collection<Section> sections = new HashSet<>();
+    @ManyToMany
     private final Collection<Subject> subjectsTaken = new HashSet<>();
 
     Student(int studentNumber, Collection<Section> sections, Collection<Subject> subjectsTaken) {
