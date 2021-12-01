@@ -7,29 +7,35 @@ import static org.apache.commons.lang3.Validate.*;
 class Student {
     @Id
     private final int studentNumber;
+    private final String firstname;
+    private final String lastname;
     @ManyToMany
     private final Collection<Section> sections = new HashSet<>();
     @ManyToMany
     private final Collection<Subject> subjectsTaken = new HashSet<>();
 
-    Student(int studentNumber, Collection<Section> sections, Collection<Subject> subjectsTaken) {
+    Student(int studentNumber, String firstname, String lastname, Collection<Section> sections, Collection<Subject> subjectsTaken) {
         isTrue (studentNumber >= 0,
                 "studentNumber can't be negative, was: " + studentNumber);
+        notBlank(firstname);
+        notBlank(lastname);
         notNull(sections, "sections can't be null");
         notNull(subjectsTaken);
         this.studentNumber = studentNumber;
+        this.firstname = firstname;
+        this.lastname = lastname;
         this.sections.addAll(sections);
         this.sections.removeIf(Objects::isNull);
         this.subjectsTaken.addAll(subjectsTaken);
         this.subjectsTaken.removeIf(Objects::isNull);
     }
 
-    Student(int studentNumber) {
-        this(studentNumber, Collections.emptyList(), Collections.emptyList());
+    Student(int studentNumber, String firstname, String lastname) {
+        this(studentNumber, firstname, lastname, Collections.emptyList(), Collections.emptyList());
     }
 
-    Student(int studentNumber, Collection<Section> sections) {
-        this(studentNumber, sections, Collections.emptyList());
+    Student(int studentNumber, String firstname, String lastname, Collection<Section> sections) {
+        this(studentNumber, firstname, lastname, sections, Collections.emptyList());
     }
 
     void enlist(Section newSection) {

@@ -47,4 +47,4 @@
     * End time is after 5:30pm
     
 - [ ] Sections cannot have the same room if their schedules are overlapping.
-- [ ] Student should have firstname and lastname
+- [X] Student should have firstname and lastname
