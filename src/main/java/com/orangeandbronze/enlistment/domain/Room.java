@@ -1,4 +1,4 @@
-package com.orangeandbronze.enlistment;
+package com.orangeandbronze.enlistment.domain;
 
 import static org.apache.commons.lang3.StringUtils.*;
 import static org.apache.commons.lang3.Validate.*;

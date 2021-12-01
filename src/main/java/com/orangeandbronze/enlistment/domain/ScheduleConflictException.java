@@ -1,4 +1,4 @@
-package com.orangeandbronze.enlistment;
+package com.orangeandbronze.enlistment.domain;
 
 class ScheduleConflictException extends RuntimeException {
     ScheduleConflictException(String msg) {

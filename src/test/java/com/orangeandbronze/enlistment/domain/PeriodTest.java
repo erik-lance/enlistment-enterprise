@@ -1,4 +1,4 @@
-package com.orangeandbronze.enlistment;
+package com.orangeandbronze.enlistment.domain;
 
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.*;

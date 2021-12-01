@@ -1,4 +1,4 @@
-package com.orangeandbronze.enlistment;
+package com.orangeandbronze.enlistment.domain;
 
 import org.junit.jupiter.api.*;
 
@@ -6,8 +6,7 @@ import java.time.*;
 import java.util.*;
 import java.util.concurrent.*;
 
-import static com.orangeandbronze.enlistment.Days.*;
-import static com.orangeandbronze.enlistment.Period.*;
+import static com.orangeandbronze.enlistment.domain.Days.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 class StudentTest {

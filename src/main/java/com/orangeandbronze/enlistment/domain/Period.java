@@ -1,4 +1,4 @@
-package com.orangeandbronze.enlistment;
+package com.orangeandbronze.enlistment.domain;
 
 import java.time.*;
 
