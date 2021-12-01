@@ -40,7 +40,7 @@ class Student {
 
     void enlist(Section newSection) {
         notNull(newSection,"section can't be null") ;
-        sections.forEach(currSection -> currSection.checkForConflict(newSection) );
+        sections.forEach(currSection -> checkForConflict(currSection, newSection) );
         newSection.checkPrereqs(subjectsTaken);
         newSection.lock(); // one thread at a time... this only works if single app instance
         try {
@@ -49,6 +49,11 @@ class Student {
         } finally {
             newSection.unlock(); // release lock
         }
+    }
+
+    private void checkForConflict(Section currSection, Section newSection) {
+        currSection.checkForScheduleConflict(newSection);
+        currSection.checkSameSubject(newSection);
     }
 
     void cancel(Section section) {

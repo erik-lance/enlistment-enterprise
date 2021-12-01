@@ -32,6 +32,7 @@ class Section {
         this.sectionId = sectionId;
         this.subject = subject;
         this.schedule = schedule;
+        room.addSection(this);
         this.room = room;
     }
 
@@ -42,12 +43,15 @@ class Section {
         this.numberOfStudents = numberOfStudents;
     }
 
-    void checkForConflict(Section other) {
-        this.schedule.checkOverlap(other.schedule);
+    void checkSameSubject(Section other) {
         if (this.subject.equals(other.subject)) {
             throw new SameSubjectException("This section " + this + " & other section " + other +
                     " have same subject of " + subject);
         }
+    }
+
+    void checkForScheduleConflict(Section other) {
+        this.schedule.checkOverlap(other.schedule);
     }
 
     int getNumberOfStudents() {
