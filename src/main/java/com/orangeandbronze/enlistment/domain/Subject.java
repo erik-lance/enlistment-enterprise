@@ -55,4 +55,9 @@ class Subject {
     public int hashCode() {
         return subjectId != null ? subjectId.hashCode() : 0;
     }
+
+    // For JPA only! Do not call!
+    private Subject() {
+        this.subjectId = null;
+    }
 }

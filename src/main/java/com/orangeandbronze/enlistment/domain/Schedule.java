@@ -45,9 +45,13 @@ class Schedule {
         result = 31 * result + (period != null ? period.hashCode() : 0);
         return result;
     }
+
+    // For JPA only! Do not call!
+    private Schedule() {
+        days = null;
+        period = null;
+    }
 }
 
-enum Days {
-    MTH, TF, WS
-}
+
 

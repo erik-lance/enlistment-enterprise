@@ -8,7 +8,7 @@ import static org.apache.commons.lang3.StringUtils.*;
 import static org.apache.commons.lang3.Validate.*;
 
 @Entity
-class Section {
+public class Section {
     @Id
     private final String sectionId;
     @ManyToOne
@@ -17,7 +17,7 @@ class Section {
     private final Schedule schedule;
     @ManyToOne
     private final Room room;
-    private int numberOfStudents;
+    private int numberOfStudents = 0;
     @Transient
     private final ReentrantLock lock = new ReentrantLock();
 
@@ -83,6 +83,22 @@ class Section {
         lock.unlock();
     }
 
+    public String getSectionId() {
+        return sectionId;
+    }
+
+    public Subject getSubject() {
+        return subject;
+    }
+
+    public Schedule getSchedule() {
+        return schedule;
+    }
+
+    public Room getRoom() {
+        return room;
+    }
+
     @Override
     public String toString() {
         return sectionId;
@@ -101,5 +117,13 @@ class Section {
     @Override
     public int hashCode() {
         return sectionId != null ? sectionId.hashCode() : 0;
+    }
+
+    // For JPA only. Do not call!
+    private Section() {
+        sectionId = null;
+        subject = null;
+        schedule = null;
+        room = null;
     }
 }

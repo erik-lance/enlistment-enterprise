@@ -1,6 +1,6 @@
 package com.orangeandbronze.enlistment.domain;
 
-class InvalidTimeException extends RuntimeException {
+class InvalidTimeException extends EnlistmentException {
 
     InvalidTimeException(String msg) {
         super(msg);

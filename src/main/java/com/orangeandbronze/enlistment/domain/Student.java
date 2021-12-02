@@ -4,7 +4,7 @@ import javax.persistence.*;
 import java.util.*;
 import static org.apache.commons.lang3.Validate.*;
 @Entity
-class Student {
+public class Student {
     @Id
     private final int studentNumber;
     private final String firstname;
@@ -38,7 +38,7 @@ class Student {
         this(studentNumber, firstname, lastname, sections, Collections.emptyList());
     }
 
-    void enlist(Section newSection) {
+    public void enlist(Section newSection) {
         notNull(newSection,"section can't be null") ;
         sections.forEach(currSection -> checkForConflict(currSection, newSection) );
         newSection.checkPrereqs(subjectsTaken);
@@ -56,7 +56,7 @@ class Student {
         currSection.checkSameSubject(newSection);
     }
 
-    void cancel(Section section) {
+    public void cancel(Section section) {
         notNull(section);
         if (sections.contains(section)) {
             sections.remove(section);
@@ -64,7 +64,19 @@ class Student {
         }
     }
 
-    Collection<Section> getSections() {
+    public int getStudentNumber() {
+        return studentNumber;
+    }
+
+    public String getFirstname() {
+        return firstname;
+    }
+
+    public String getLastname() {
+        return lastname;
+    }
+
+    public Collection<Section> getSections() {
         return new ArrayList<>(sections);
     }
 
@@ -88,5 +100,10 @@ class Student {
         return studentNumber;
     }
 
-
+    // For JPA only. Do not call!
+    private Student() {
+        studentNumber = -1;
+        firstname = null;
+        lastname = null;
+    }
 }

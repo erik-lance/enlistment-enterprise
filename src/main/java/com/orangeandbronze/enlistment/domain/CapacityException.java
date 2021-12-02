@@ -1,6 +1,6 @@
 package com.orangeandbronze.enlistment.domain;
 
-class CapacityException extends RuntimeException {
+class CapacityException extends EnlistmentException {
     CapacityException(String msg) {
         super(msg);
     }

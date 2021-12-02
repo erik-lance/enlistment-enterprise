@@ -60,4 +60,10 @@ class Period {
         result = 31 * result + (endTime != null ? endTime.hashCode() : 0);
         return result;
     }
+
+    // For JPA only! Do not call!
+    private Period() {
+        startTime = null;
+        endTime = null;
+    }
 }

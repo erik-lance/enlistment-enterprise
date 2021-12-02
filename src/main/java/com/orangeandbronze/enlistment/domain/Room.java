@@ -10,16 +10,17 @@ import static org.apache.commons.lang3.Validate.*;
 @Entity
 class Room {
     @Id
-    private final String roomName;
+    private final String name;
     private final int capacity;
+    @OneToMany
     private final Collection<Section> sections = new HashSet<>();
 
-    Room(String roomName, int capacity, Collection<Section> sections) {
-        notBlank(roomName);
-        isTrue(isAlphanumeric(roomName), "roomName must be alphanumeric, was: " + roomName);
+    Room(String name, int capacity, Collection<Section> sections) {
+        notBlank(name);
+        isTrue(isAlphanumeric(name), "roomName must be alphanumeric, was: " + name);
         isTrue(capacity > 0, "capacity must be greater than zero, was: " + capacity);
         notNull(sections);
-        this.roomName = roomName;
+        this.name = name;
         this.capacity = capacity;
         this.sections.addAll(sections);
         this.sections.removeIf(Objects::isNull);
@@ -41,9 +42,17 @@ class Room {
         sections.add(newSection);
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public int getCapacity() {
+        return capacity;
+    }
+
     @Override
     public String toString() {
-        return roomName;
+        return name;
     }
 
     @Override
@@ -53,11 +62,17 @@ class Room {
 
         Room room = (Room) o;
 
-        return roomName != null ? roomName.equals(room.roomName) : room.roomName == null;
+        return name != null ? name.equals(room.name) : room.name == null;
     }
 
     @Override
     public int hashCode() {
-        return roomName != null ? roomName.hashCode() : 0;
+        return name != null ? name.hashCode() : 0;
+    }
+
+    // For JPA only! Do not call!
+    private Room() {
+        name = null;
+        capacity = -1;
     }
 }

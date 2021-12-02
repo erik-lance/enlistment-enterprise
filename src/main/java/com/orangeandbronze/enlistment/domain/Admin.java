@@ -57,7 +57,7 @@ public class Admin {
         return id == other.id;
     }
 
-	/** For JPA-Hibernate */
+	/** For JPA-Hibernate only! Do not call! */
 	Admin() {
 		this.id = -1;
 		this.firstname = null;
