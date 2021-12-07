@@ -31,6 +31,7 @@ class Room {
     }
 
     void checkIfAtOrOverCapacity(int occupancy) {
+        isTrue(occupancy >= 0, "occupancy must be non-negative, was: " + occupancy);
         if (occupancy >= capacity) {
             throw new CapacityException("at or over capacity of " + capacity + "  at occupancy of " + occupancy);
         }
