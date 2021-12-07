@@ -64,7 +64,6 @@ class EnlistController {
     }
 
 
-    @Retryable(ObjectOptimisticLockingFailureException.class)
     @PostMapping
     public String enlist(@ModelAttribute Student student, @RequestParam String sectionId,
                          @RequestParam UserAction userAction) {
