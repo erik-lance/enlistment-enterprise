@@ -65,8 +65,8 @@ class EnlistController {
 
 
     @PostMapping
-    public String enlist(@ModelAttribute Student student, @RequestParam String sectionId,
-                         @RequestParam UserAction userAction) {
+    public String enlistOrCancel(@ModelAttribute Student student, @RequestParam String sectionId,
+                                 @RequestParam UserAction userAction) {
         return "";
     }
 
