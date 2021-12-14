@@ -184,7 +184,7 @@ class StudentTest {
         // Given student & 2 sections same subject
         Student student = newDefaultStudent();
         Section sec1 = new Section("A", new Subject("C"), MTH830to10, new Room("X", 10));
-        Section sec2 = new Section("A", new Subject("C"), TF830to10, new Room("Y", 10));
+        Section sec2 = new Section("B", new Subject("C"), TF830to10, new Room("Y", 10));
         // When student enlists in both
         student.enlist(sec1);
         // Then exception should be thrown in 2nd
