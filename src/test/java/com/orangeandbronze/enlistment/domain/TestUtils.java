@@ -15,16 +15,16 @@ public class TestUtils {
     public static final Subject DEFAULT_SUBJECT = new Subject(DEFAULT_SUBJECT_ID);
     public static int DEFAULT_STUDENT_NUMBER = 10;
 
-    public static Student newStudent(int studentNumber, Collection<Section> sections) {
-        return new Student(studentNumber, "x", "x", sections);
+    public static Student newStudent(int studentNumber, Collection<Section> sections, Collection<Subject> subjectsTaken) {
+        return new Student(studentNumber, "firstname", "lastname", sections, subjectsTaken);
     }
 
-    public static Student newStudent(int studentNumber, Collection<Section> sections, Collection<Subject> subjectsTaken) {
-        return new Student(studentNumber, "x", "x", sections, subjectsTaken);
+    public static Student newStudent(int studentNumber, Collection<Section> sections) {
+        return newStudent(studentNumber, sections, Collections.emptyList());
     }
 
     public static Student newStudent(int studentNumber) {
-        return new Student(studentNumber, "x", "x");
+        return newStudent(studentNumber, Collections.emptyList());
     }
     /**
      * Return Student with studentNumber "1", no enlisted sections, no taken subjects
