@@ -5,13 +5,9 @@ import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.boot.test.autoconfigure.web.servlet.*;
 import org.springframework.boot.test.context.*;
-import org.springframework.jdbc.core.*;
 import org.springframework.test.annotation.*;
-import org.springframework.test.context.*;
 import org.springframework.test.web.servlet.*;
-import org.testcontainers.containers.*;
 import org.testcontainers.junit.jupiter.*;
-import org.testcontainers.junit.jupiter.Container;
 
 import java.time.*;
 import java.util.*;
@@ -19,35 +15,18 @@ import java.util.concurrent.*;
 
 import static com.orangeandbronze.enlistment.controllers.UserAction.*;
 import static com.orangeandbronze.enlistment.domain.TestUtils.*;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 
 
 @Testcontainers
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 @AutoConfigureMockMvc
 @SpringBootTest
-class EnlistControllerIT {
+class EnlistControllerIT extends AbstractControllerIT {
 
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
-    @Autowired
-    private MockMvc mockMvc;
     @Autowired
     private StudentRepository studentRepository;
-
-    private final static String TEST = "test";
-
-    @Container
-    private final PostgreSQLContainer container = new PostgreSQLContainer("postgres:14")
-            .withDatabaseName(TEST).withUsername(TEST).withPassword(TEST);
-
-    @DynamicPropertySource
-    private static void properties(DynamicPropertyRegistry registry) {
-        registry.add("spring.datasource.url", () -> "jdbc:tc:postgresql:14:///" + TEST);
-        registry.add("spring.datasource.password", () -> TEST);
-        registry.add("spring.datasource.username", () -> TEST);
-    }
 
     private void insertDefaultStudentAndDefaultSection() {
         jdbcTemplate.update("INSERT INTO student (student_number, firstname, lastname) VALUES (?, ?, ?)",
