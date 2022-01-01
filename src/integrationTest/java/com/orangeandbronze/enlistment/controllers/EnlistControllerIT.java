@@ -163,14 +163,10 @@ class EnlistControllerIT extends AbstractControllerIT {
         public void run() {
             try {
                 latch.await(); // The thread keeps waiting till it is informed
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-            try {
                 mockMvc.perform(post("/enlist").sessionAttr("student", student)
                         .param("sectionId", DEFAULT_SECTION_ID).param("userAction", ENLIST.name()));
             } catch (Exception e) {
-                e.printStackTrace();
+                throw new RuntimeException(e);
             }
         }
     }
