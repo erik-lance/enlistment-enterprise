@@ -1,8 +1,10 @@
+import org.unbrokendome.gradle.plugins.testsets.util.get
+
 plugins {
+    java
     id("org.springframework.boot") version "2.5.6"
     id("io.spring.dependency-management") version "1.0.11.RELEASE"
     id("org.unbroken-dome.test-sets") version "4.0.0"
-    java
 }
 
 group = "com.orangeandbronze.enlistment"
@@ -17,6 +19,11 @@ java {
 repositories {
     mavenCentral()
 }
+
+testSets {
+    create("integrationTest")
+}
+
 
 dependencies {
     implementation("org.apache.commons:commons-collections4:4.4")
@@ -35,22 +42,11 @@ dependencies {
     testImplementation("org.testcontainers:junit-jupiter:$testcontainersVersion")
     runtimeOnly("org.springframework.boot:spring-boot-devtools")
     runtimeOnly("org.postgresql:postgresql")
+    "integrationTestCompileOnly"(sourceSets.test.get().output)
 
 
 }
 
-testSets {
-    libraries {
-        create("testCommon")
-    }
-    create("integrationTest") {
-        imports("testCommon")
-    }
-
-    val unitTest by getting {
-        imports("testCommon")
-    }
-}
 
 tasks.withType<Test> {
     useJUnitPlatform()
