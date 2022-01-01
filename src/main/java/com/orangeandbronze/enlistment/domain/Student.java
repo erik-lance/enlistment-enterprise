@@ -40,6 +40,9 @@ public class Student {
 
     public void enlist(Section newSection) {
         notNull(newSection,"section can't be null") ;
+        if (sections.contains(newSection)) {
+            return; // do nothing if it's already present
+        }
         sections.forEach(currSection -> checkForConflict(currSection, newSection) );
         newSection.checkPrereqs(subjectsTaken);
         newSection.lock(); // one thread at a time... this only works if single app instance

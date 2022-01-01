@@ -11,7 +11,7 @@ class Period {
     private final LocalTime startTime;
     private final LocalTime endTime;
 
-    public Period(LocalTime startTime, LocalTime endTime) {
+    Period(LocalTime startTime, LocalTime endTime) {
         notNull(startTime);
         notNull(endTime);
         isTrue(startTime.isBefore(endTime),

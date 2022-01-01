@@ -1,6 +1,9 @@
 package com.orangeandbronze.enlistment.domain;
 
+import org.hibernate.annotations.*;
+
 import javax.persistence.*;
+import javax.persistence.Entity;
 import java.util.*;
 import java.util.concurrent.locks.*;
 
@@ -18,6 +21,11 @@ public class Section {
     @ManyToOne
     private final Room room;
     private int numberOfStudents = 0;
+
+    @Version
+    @ColumnDefault("0")
+    private final int version = 0;
+
     @Transient
     private final ReentrantLock lock = new ReentrantLock();
 
@@ -43,6 +51,10 @@ public class Section {
         this.numberOfStudents = numberOfStudents;
     }
 
+    public void checkIfFull() {
+        room.checkIfAtOrOverCapacity(numberOfStudents);
+    }
+
     void checkSameSubject(Section other) {
         if (this.subject.equals(other.subject)) {
             throw new SameSubjectException("This section " + this + " & other section " + other +
@@ -63,7 +75,7 @@ public class Section {
         numberOfStudents++;
     }
 
-    public void decrementNumberOfStudents() {
+    void decrementNumberOfStudents() {
         numberOfStudents--;
     }
 

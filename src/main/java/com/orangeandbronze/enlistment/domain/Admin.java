@@ -20,7 +20,7 @@ public class Admin {
         this.lastname = lastname;
     }
 
-    public int getId() {
+    int getId() {
         return id;
     }
 
