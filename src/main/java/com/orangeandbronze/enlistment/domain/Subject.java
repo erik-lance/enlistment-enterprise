@@ -6,7 +6,7 @@ import java.util.*;
 import static org.apache.commons.lang3.StringUtils.isAlphanumeric;
 import static org.apache.commons.lang3.Validate.*;
 @Entity
-class Subject {
+public class Subject {
     @Id
     private final String subjectId;
     @ManyToMany

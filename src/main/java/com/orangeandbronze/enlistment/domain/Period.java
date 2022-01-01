@@ -6,12 +6,12 @@ import java.time.*;
 import static org.apache.commons.lang3.Validate.*;
 
 @Embeddable
-class Period {
+public class Period {
 
     private final LocalTime startTime;
     private final LocalTime endTime;
 
-    Period(LocalTime startTime, LocalTime endTime) {
+    public Period(LocalTime startTime, LocalTime endTime) {
         notNull(startTime);
         notNull(endTime);
         isTrue(startTime.isBefore(endTime),

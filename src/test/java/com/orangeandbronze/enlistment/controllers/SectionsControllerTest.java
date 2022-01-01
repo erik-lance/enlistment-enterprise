@@ -16,12 +16,12 @@ class SectionsControllerTest {
 
     @Test
     void createSection_save_new_section_to_repository() {
-        // Given the controller, repositories & parameter arguments
+        // Given the controller, repositories & valid parameter arguments for creating a section
         final String roomName = "roomName";
         SubjectRepository subjectRepository = mock(SubjectRepository.class);
-        when(subjectRepository.findById(DEFAULT_SUBJECT_ID)).thenReturn(Optional.of(mockSubject()));
+        when(subjectRepository.findById(DEFAULT_SUBJECT_ID)).thenReturn(Optional.of(mock(Subject.class)));
         RoomRepository roomRepository = mock(RoomRepository.class);
-        when(roomRepository.findById(roomName)).thenReturn(Optional.of(mockRoom()));
+        when(roomRepository.findById(roomName)).thenReturn(Optional.of(mock(Room.class)));
         SectionRepository sectionRepository = mock(SectionRepository.class);
         SectionsController sectionsController = new SectionsController();
         sectionsController.setSubjectRepo(subjectRepository);

@@ -8,7 +8,7 @@ import static org.apache.commons.lang3.StringUtils.*;
 import static org.apache.commons.lang3.Validate.*;
 
 @Entity
-class Room {
+public class Room {
     @Id
     private final String name;
     private final int capacity;

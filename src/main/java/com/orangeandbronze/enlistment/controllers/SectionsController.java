@@ -1,6 +1,7 @@
 package com.orangeandbronze.enlistment.controllers;
 
 import com.orangeandbronze.enlistment.domain.*;
+import com.orangeandbronze.enlistment.domain.Period;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.stereotype.*;
 import org.springframework.ui.*;
@@ -43,7 +44,12 @@ class SectionsController {
     @PostMapping
     public String createSection(@RequestParam String sectionId, @RequestParam String subjectId, @RequestParam Days days,
                                 @RequestParam String start, @RequestParam String end, @RequestParam String roomName, RedirectAttributes redirectAttrs) {
-        return "";
+        var subject = subjectRepo.findById(subjectId).orElseThrow(() -> new NoSuchElementException("No subject found for subjectId " + subjectId));
+        var room = roomRepo.findById(roomName).orElseThrow(() -> new NoSuchElementException("No room found for roomName " + roomName));
+        var period = new Period(LocalTime.parse(start), LocalTime.parse(end));
+        sectionRepo.save(new Section(sectionId, subject, new Schedule(days, period), room));
+        redirectAttrs.addFlashAttribute("sectionSuccessMessage", "Successfully created new section " + sectionId);
+        return "redirect:sections";
     }
 
     @ExceptionHandler(EnlistmentException.class)
