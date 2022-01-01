@@ -42,7 +42,7 @@ dependencies {
     testImplementation("org.testcontainers:junit-jupiter:$testcontainersVersion")
     runtimeOnly("org.springframework.boot:spring-boot-devtools")
     runtimeOnly("org.postgresql:postgresql")
-    "integrationTestCompileOnly"(sourceSets.test.get().output)
+    "integrationTestImplementation"(sourceSets.test.get().output)
 
 
 }
