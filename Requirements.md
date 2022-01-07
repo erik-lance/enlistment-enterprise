@@ -48,3 +48,7 @@
     
 - [X] Sections cannot have the same room if their schedules are overlapping.
 - [X] Student should have firstname and lastname
+
+- [ ] A section has an instructor, a member of the faculty, identified by facultyNumber. Faculty number must be non-negative.
+- [ ] Faculty should have lastname & firstname
+- [ ] Two sections cannot share the same instructor if their schedules overlap
