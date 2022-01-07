@@ -18,6 +18,11 @@ repositories {
     mavenCentral()
 }
 
+testSets {
+    create("integrationTest")
+}
+
+
 dependencies {
     implementation("org.apache.commons:commons-collections4:4.4")
     implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
@@ -36,20 +41,7 @@ dependencies {
     runtimeOnly("org.springframework.boot:spring-boot-devtools")
     runtimeOnly("org.postgresql:postgresql")
 
-
-}
-
-testSets {
-    libraries {
-        create("testCommon")
-    }
-    create("integrationTest") {
-        imports("testCommon")
-    }
-
-    val unitTest by getting {
-        imports("testCommon")
-    }
+    "integrationTestImplementation"(sourceSets.test.get().output)
 }
 
 tasks.withType<Test> {
