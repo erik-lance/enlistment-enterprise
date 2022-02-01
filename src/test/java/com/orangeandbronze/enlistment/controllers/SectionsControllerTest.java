@@ -23,13 +23,16 @@ class SectionsControllerTest {
         RoomRepository roomRepository = mock(RoomRepository.class);
         when(roomRepository.findById(roomName)).thenReturn(Optional.of(mock(Room.class)));
         SectionRepository sectionRepository = mock(SectionRepository.class);
+        FacultyRepository facultyRepository = mock(FacultyRepository.class);
+        when(facultyRepository.findById(DEFAULT_FACULTY_NUMBER)).thenReturn(Optional.of(DEFAULT_FACULTY));
         SectionsController sectionsController = new SectionsController();
         sectionsController.setSubjectRepo(subjectRepository);
         sectionsController.setSectionRepo(sectionRepository);
         sectionsController.setRoomRepo(roomRepository);
+        sectionsController.setFacultyRepository(facultyRepository);
         RedirectAttributes redirectAttributes = mock(RedirectAttributes.class);
         // When the controller receives them
-        sectionsController.createSection(DEFAULT_SECTION_ID, DEFAULT_SUBJECT_ID, MTH, "09:00", "10:00", roomName, redirectAttributes);
+        sectionsController.createSection(DEFAULT_SECTION_ID, DEFAULT_SUBJECT_ID, MTH, "09:00", "10:00", roomName, DEFAULT_FACULTY_NUMBER, redirectAttributes);
         // Then it should retrieve the entities from the db, create a new section, & save the section in the db
         ArgumentCaptor<Section> sectionArgumentCaptor = ArgumentCaptor.forClass(Section.class);
         assertAll(

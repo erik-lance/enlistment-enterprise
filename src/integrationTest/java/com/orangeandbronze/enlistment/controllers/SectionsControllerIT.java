@@ -10,6 +10,7 @@ import java.time.*;
 import java.util.*;
 
 import static com.orangeandbronze.enlistment.domain.Days.MTH;
+import static com.orangeandbronze.enlistment.domain.TestUtils.*;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
@@ -33,10 +34,11 @@ class SectionsControllerIT extends AbstractControllerIT {
 
         jdbcTemplate.update("INSERT INTO subject (subject_id) VALUES (?)", subjectId);
         jdbcTemplate.update("INSERT INTO room (name, capacity) VALUES (?, ?)", roomName, 10);
+        jdbcTemplate.update("INSERT INTO faculty (faculty_number) VALUES (?)", DEFAULT_FACULTY_NUMBER);
         // When the path "sections" is invoked using POST method
         mockMvc.perform(post("/sections").sessionAttr("admin", mock(Admin.class)).param(sectionId, sectionId)
                 .param(subjectId, subjectId).param("days", days.name()).param("start", start)
-                .param("end", end).param(roomName, roomName));
+                .param("end", end).param(roomName, roomName).param("facultyNumber", String.valueOf(DEFAULT_FACULTY_NUMBER)));
         // Then new section with correct fields should be found in DB
         Map<String, Object> results = jdbcTemplate.queryForMap("SELECT * FROM section WHERE section_id = ?", sectionId);
         assertAll(
@@ -45,7 +47,8 @@ class SectionsControllerIT extends AbstractControllerIT {
                 () -> assertEquals(days.ordinal(), results.get("days")),
                 () -> assertEquals(LocalTime.parse(start), LocalTime.parse(results.get("start_time").toString())),
                 () -> assertEquals((LocalTime.parse(end)), LocalTime.parse(results.get("end_time").toString())),
-                () -> assertEquals(roomName, results.get("room_name"))
+                () -> assertEquals(roomName, results.get("room_name")),
+                () -> assertEquals(DEFAULT_FACULTY_NUMBER, results.get("instructor_faculty_number"))
         );
     }
 
