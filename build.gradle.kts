@@ -26,7 +26,6 @@ testSets {
     create("integrationTest")
 }
 
-
 dependencies {
     implementation("org.apache.commons:commons-collections4:4.4")
     implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
@@ -54,8 +53,6 @@ dependencies {
     liquibaseRuntime(sourceSets.getByName("main").runtimeClasspath)
     liquibaseRuntime(sourceSets.getByName("main").output)
     implementation("net.lbruun.springboot:preliquibase-spring-boot-starter:1.1.1")
-
-
 }
 
 val prop = Properties().apply {
@@ -78,10 +75,8 @@ configurations {
             )
         }
         runList = "main"
-
     }
 }
-
 
 tasks.withType<Test> {
     useJUnitPlatform()
