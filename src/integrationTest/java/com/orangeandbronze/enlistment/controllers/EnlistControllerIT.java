@@ -62,13 +62,18 @@ class EnlistControllerIT extends AbstractControllerIT {
 
         // Then a new record in the student_sections, containing the corresponding studentNumber & sectionId
         assertDefaultStudentIsEnlistedInDefaultSection(true);
+    }
 
+    private void insertEnlistmentOfDefaultStudentInDefaultSection() {
+        jdbcTemplate.update("INSERT INTO student_sections (student_student_number, sections_section_id) VALUES (?,?)",
+                DEFAULT_STUDENT_NUMBER, DEFAULT_SECTION_ID);
     }
 
     @Test
     void cancel_student_in_section() throws Exception {
         // Given in the DB: a student & a section, and a enlistment record existing in student_sections
         insertDefaultStudentAndDefaultSection();
+        insertEnlistmentOfDefaultStudentInDefaultSection();
         // When the POST method on path "/enlist" is invoked, with
         // parameters for sectionId matching the record in the db, and UserAction "ENLIST"
         // with a student object in session corresponding to the student record in the db
