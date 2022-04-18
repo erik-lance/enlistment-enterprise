@@ -3,6 +3,7 @@ import java.util.*
 
 plugins {
     java
+    groovy
     id("org.springframework.boot") version "2.5.6"
     id("io.spring.dependency-management") version "1.0.11.RELEASE"
     id("org.unbroken-dome.test-sets") version "4.0.0"
@@ -11,7 +12,7 @@ plugins {
 
 group = "com.orangeandbronze.enlistment"
 version = "0.0.1-SNAPSHOT"
-val testcontainersVersion = "1.16.2"
+val testcontainersVersion = "1.16.3"
 
 java {
     sourceCompatibility = JavaVersion.VERSION_11
@@ -45,14 +46,17 @@ dependencies {
     runtimeOnly("org.postgresql:postgresql")
     "integrationTestImplementation"(sourceSets.test.get().output)
 
-    liquibaseRuntime("org.liquibase:liquibase-core:4.6.1")
-    liquibaseRuntime("info.picocli:picocli:4.6.2")
+    liquibaseRuntime("org.liquibase:liquibase-core:4.9.1")
+    liquibaseRuntime("info.picocli:picocli:4.6.3")
     liquibaseRuntime("org.liquibase:liquibase-groovy-dsl:3.0.2")
-    liquibaseRuntime("org.liquibase.ext:liquibase-hibernate5:4.6.1")
+    liquibaseRuntime("org.liquibase.ext:liquibase-hibernate5:4.9.1")
     liquibaseRuntime(sourceSets.getByName("main").compileClasspath)
     liquibaseRuntime(sourceSets.getByName("main").runtimeClasspath)
     liquibaseRuntime(sourceSets.getByName("main").output)
     implementation("net.lbruun.springboot:preliquibase-spring-boot-starter:1.1.1")
+
+    implementation("org.codehaus.groovy:groovy-all:3.1.10")
+    testImplementation("org.spockframework:spock-core:2.1-groovy-3.0")
 }
 
 val prop = Properties().apply {
