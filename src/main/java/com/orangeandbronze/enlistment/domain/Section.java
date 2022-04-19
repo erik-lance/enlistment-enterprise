@@ -20,8 +20,7 @@ public class Section {
     private final Schedule schedule;
     @ManyToOne
     private final Room room;
-    @ManyToOne
-    private final Faculty instructor;
+
     private int numberOfStudents = 0;
 
     @Version
@@ -31,7 +30,7 @@ public class Section {
     @Transient
     private final ReentrantLock lock = new ReentrantLock();
 
-    public Section(String sectionId, Subject subject, Schedule schedule, Room room, Faculty instructor) {
+    public Section(String sectionId, Subject subject, Schedule schedule, Room room) {
         notBlank(sectionId,
                 "sectionId can't be null, empty or whitespace ");
         notNull(subject);
@@ -39,24 +38,18 @@ public class Section {
                 "sectionId must be alphanumeric, was: "
                         + sectionId);
         notNull(room);
-        notNull(instructor);
         this.sectionId = sectionId;
         this.subject = subject;
         this.schedule = schedule;
         room.addSection(this);
         this.room = room;
-        this.instructor = instructor;
     }
 
-    Section(String sectionId, Subject subject, Schedule schedule, Room room, Faculty instructor, int numberOfStudents) {
-        this(sectionId, subject, schedule, room, instructor);
+    Section(String sectionId, Subject subject, Schedule schedule, Room room, int numberOfStudents) {
+        this(sectionId, subject, schedule, room);
         isTrue(numberOfStudents >= 0,
                 "numberOfStudents must be non-negative, was: " + numberOfStudents);
         this.numberOfStudents = numberOfStudents;
-    }
-
-    public void checkIfFull() {
-        room.checkIfAtOrOverCapacity(numberOfStudents);
     }
 
     void checkSameSubject(Section other) {
@@ -141,6 +134,5 @@ public class Section {
         subject = null;
         schedule = null;
         room = null;
-        instructor = null;
     }
 }

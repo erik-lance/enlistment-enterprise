@@ -49,9 +49,9 @@ dependencies {
     liquibaseRuntime("info.picocli:picocli:4.6.3")
     liquibaseRuntime("org.liquibase:liquibase-groovy-dsl:3.0.2")
     liquibaseRuntime("org.liquibase.ext:liquibase-hibernate5:4.9.1")
-//    liquibaseRuntime(sourceSets.getByName("main").compileClasspath)
-//    liquibaseRuntime(sourceSets.getByName("main").runtimeClasspath)
-//    liquibaseRuntime(sourceSets.getByName("main").output)
+    liquibaseRuntime sourceSets.main.output
+    liquibaseRuntime sourceSets.main.compileClasspath
+    liquibaseRuntime sourceSets.main.runtimeClasspath
     implementation("net.lbruun.springboot:preliquibase-spring-boot-starter:1.1.1")
 
     implementation 'org.codehaus.groovy:groovy-all:3.0.10'
@@ -64,9 +64,9 @@ file('src/main/resources/application.properties').withInputStream {
 }
 
 configurations {
-//    compileOnly {
-//        extendsFrom(configurations.annotationProcessor.get())
-//    }
+    compileOnly {
+        extendsFrom(configurations.annotationProcessor)
+    }
     liquibase {
         activities {
             main {
