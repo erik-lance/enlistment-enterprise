@@ -22,13 +22,18 @@ class EnlistControllerTest {
         UserAction userAction = UserAction.ENLIST;
         // When enlist (post) method is called
         SectionRepository sectionRepository = mock(SectionRepository.class);
-        Section section = new Section(sectionId, new Subject("X"),
-                MTH830to10,, new Room("X",10));
+        Section section = newDefaultSection();
         when(sectionRepository.findById(sectionId)).thenReturn(Optional.of(section));
         StudentRepository studentRepository = mock(StudentRepository.class);
         EnlistController controller = new EnlistController();
         controller.setSectionRepo(sectionRepository);
         controller.setStudentRepo(studentRepository);
+
+        EntityManager entityManager = mock(EntityManager.class);
+        Session session = mock(Session.class);
+        when(entityManager.unwrap(Session.class)).thenReturn(session);
+        controller.setEntityManager(entityManager);
+
         String returnVal = controller.enlistOrCancel(student, sectionId, userAction);
         // Then
         // - retrieve the section object from the DB using the sectionId
