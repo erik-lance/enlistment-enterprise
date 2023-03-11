@@ -74,8 +74,7 @@ class EnlistController {
         Session session = entityManager.unwrap(Session.class);
         notNull(session);
         session.update(student);
-
-        student.enlist(section);
+        userAction.act(student, section);
         studentRepo.save(student);
         sectionRepo.save(section);
         return "redirect:enlist";
