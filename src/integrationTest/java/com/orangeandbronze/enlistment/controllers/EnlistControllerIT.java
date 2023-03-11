@@ -13,6 +13,7 @@ import org.springframework.test.web.servlet.*;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.*;
 
+import javax.annotation.PostConstruct;
 import java.time.*;
 import java.util.*;
 import java.util.concurrent.*;
@@ -38,6 +39,18 @@ class EnlistControllerIT {
     @Autowired
     private StudentRepository studentRepository;
 
+    private final static String TEST = "test";
+
+    @Container
+    private final PostgreSQLContainer container = new PostgreSQLContainer("postgres:14")
+            .withDatabaseName(TEST).withUsername(TEST).withPassword(TEST);
+
+    @DynamicPropertySource
+    private static void properties(DynamicPropertyRegistry registry) {
+        registry.add("spring.datasource.url", () -> "jdbc:tc:postgresql:14:///" + TEST);
+        registry.add("spring.datasource.username", () -> TEST);
+        registry.add("spring.datasource.password", () -> TEST);
+    }
 
     @Test
     void enlist_student_in_section() throws Exception {
