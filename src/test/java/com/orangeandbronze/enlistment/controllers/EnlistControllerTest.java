@@ -17,12 +17,29 @@ class EnlistControllerTest {
     @Test
     void enlist_student_in_section() {
         // Given a student & the sectionId of the section that the student wants to enroll in
+        Student student = mock(Student.class);
+        String sectionId = "X";
+        UserAction userAction = UserAction.ENLIST;
+        // When enlist (post) method is called
+        SectionRepository sectionRepository = mock(SectionRepository.class);
+        Section section = new Section(sectionId, new Subject("X"),
+                MTH830to10,, new Room("X",10));
+        when(sectionRepository.findById(sectionId)).thenReturn(Optional.of(section));
+        StudentRepository studentRepository = mock(StudentRepository.class);
         EnlistController controller = new EnlistController();
-        Student student = newDefaultStudent();
-        SectionRepository sectionRepository = null;
         controller.setSectionRepo(sectionRepository);
-        // When the parqmeters are received in the POST method
-        controller.enlistOrCancel(student, DEFAULT_SECTION_ID, UserAction.ENLIST);
+        controller.setStudentRepo(studentRepository);
+        String returnVal = controller.enlistOrCancel(student, sectionId, userAction);
+        // Then
+        // - retrieve the section object from the DB using the sectionId
+        verify(sectionRepository).findById(sectionId);
+        // - student.enlist will be called, passing in the section
+        verify(student).enlist(section);
+        // - save student to DB
+        verify(studentRepository).save(student);
+        // - save section to DB
+        verify(sectionRepository).save(section);
+        assertEquals("redirect:enlist", returnVal);
     }
 
 }

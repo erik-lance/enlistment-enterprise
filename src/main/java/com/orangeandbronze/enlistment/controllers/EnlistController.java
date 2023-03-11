@@ -68,7 +68,17 @@ class EnlistController {
     @PostMapping
     public String enlistOrCancel(@ModelAttribute Student student, @RequestParam String sectionId,
                          @RequestParam UserAction userAction) {
-        return "";
+        Section section = sectionRepo.findById(sectionId).orElseThrow(() -> new NoSuchElementException(
+                "no section found with sectionId " + sectionId));
+
+        Session session = entityManager.unwrap(Session.class);
+        notNull(session);
+        session.update(student);
+
+        student.enlist(section);
+        studentRepo.save(student);
+        sectionRepo.save(section);
+        return "redirect:enlist";
     }
 
 
