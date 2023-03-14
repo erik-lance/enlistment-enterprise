@@ -1,1 +1,1 @@
-# Fork (don't clone) this repo to get started!
+# Clone (don't fork) this repo to get started!
