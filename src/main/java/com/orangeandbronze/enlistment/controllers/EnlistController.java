@@ -65,13 +65,13 @@ class EnlistController {
         return "enlist";
     }
 
-
+    @Retryable(ObjectOptimisticLockingFailureException.class)
     @PostMapping
     public String enlistOrCancel(@ModelAttribute Student student, @RequestParam String sectionId,
                          @RequestParam UserAction userAction) {
         Section section = sectionRepo.findById(sectionId).orElseThrow(() -> new NoSuchElementException(
                 "no section found with sectionId " + sectionId));
-
+        section.checkIfFull();
         Session session = entityManager.unwrap(Session.class);
         notNull(session);
         session.update(student);
