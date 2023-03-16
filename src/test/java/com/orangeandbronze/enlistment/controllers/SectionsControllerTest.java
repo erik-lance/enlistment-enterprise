@@ -59,7 +59,7 @@ class SectionsControllerTest {
         // - save the section in the db
         verify(sectionRepository).save(section);
         // - set a flash attribute called "sectionSuccessMessage" with the message "Successfully created new section " + sectionId
-        verify(redirectAttrs).addFlashAttribute("sectionSuccessMessage", "Successfully created new section" + sectionId);
+        verify(redirectAttrs).addFlashAttribute("sectionSuccessMessage", "Successfully created new section " + sectionId);
         // - return the string value "redirect:sections" to redirect to the GET method
         assertEquals("redirect:sections", returnVal);
     }
