@@ -47,7 +47,12 @@ class SectionsController {
     public String createSection(@RequestParam String sectionId, @RequestParam String subjectId, @RequestParam Days days,
                                 @RequestParam String start, @RequestParam String end, @RequestParam String roomName,
                                 RedirectAttributes redirectAttrs){
-       notNull(sectionId);
+        notNull(sectionId);
+        notNull(subjectId);
+        notNull(days);
+        notNull(start);
+        notNull(end);
+        notNull(roomName);
         sectionRepo.findById(sectionId).ifPresent(section -> {
             throw new IllegalArgumentException("sectionId already exists");
             // would have used EnlistmentException to show as an error message in website,
