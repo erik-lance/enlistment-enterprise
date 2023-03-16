@@ -21,7 +21,7 @@ public class Subject {
         this.prerequisites.removeIf(Objects::isNull);
     }
 
-    Subject(String subjectId) {
+    public Subject(String subjectId) {
         this(subjectId, Collections.emptyList());
     }
 

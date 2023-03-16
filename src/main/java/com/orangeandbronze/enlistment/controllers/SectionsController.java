@@ -11,6 +11,8 @@ import org.springframework.web.servlet.mvc.support.*;
 import java.time.*;
 import java.util.*;
 
+import static org.apache.commons.lang3.Validate.notNull;
+
 @Controller
 @RequestMapping("sections")
 @SessionAttributes("admin")
@@ -44,8 +46,23 @@ class SectionsController {
     @PostMapping
     public String createSection(@RequestParam String sectionId, @RequestParam String subjectId, @RequestParam Days days,
                                 @RequestParam String start, @RequestParam String end, @RequestParam String roomName,
-                                RedirectAttributes redirectAttrs) {
-        return "";
+                                RedirectAttributes redirectAttrs){
+       notNull(sectionId);
+        sectionRepo.findById(sectionId).ifPresent(section -> {
+            throw new IllegalArgumentException("sectionId already exists");
+            // would have used EnlistmentException to show as an error message in website,
+            // but it needs to be made public if ever OR add a custom exception in domain
+        });
+        Subject subject = subjectRepo.findById(subjectId).orElseThrow(() -> new NoSuchElementException("no subject found for subjectId " + subjectId));
+        Room room = roomRepo.findById(roomName).orElseThrow(() -> new NoSuchElementException("no room found for roomName " + roomName));
+        Period period = new Period(LocalTime.parse(start), LocalTime.parse(end));
+        Schedule schedule = new Schedule(days, period);
+        Section section = new Section(sectionId, subject, schedule, room);
+
+        sectionRepo.save(section);
+        redirectAttrs.addFlashAttribute("sectionSuccessMessage", "Successfully created new section " + sectionId);
+
+        return "redirect:sections";
     }
 
     @ExceptionHandler(EnlistmentException.class)

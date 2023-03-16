@@ -26,7 +26,7 @@ public class Room {
         this.sections.removeIf(Objects::isNull);
     }
 
-    Room(String roomName, int capacity) {
+    public Room(String roomName, int capacity) {
         this(roomName, capacity, Collections.emptyList());
     }
 
@@ -75,5 +75,10 @@ public class Room {
     private Room() {
         name = null;
         capacity = -1;
+    }
+
+    public void removeSection(Section section) {
+        notNull(section);
+        sections.remove(section);
     }
 }
