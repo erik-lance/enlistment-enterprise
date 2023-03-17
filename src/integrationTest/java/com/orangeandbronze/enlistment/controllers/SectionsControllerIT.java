@@ -54,15 +54,12 @@ class SectionsControllerIT  {
     // No need for multi-threaded test, unlikely that work of two or more admins will collide
     @Test
     void createSection_save_to_db() throws Exception {
-        final int adminId = 9;
+        final int adminId = 1;
 
         final String startTime = "08:00";
         final String endTime = "09:00";
         final String roomName = "X";
 
-        // Insert an admin
-        jdbcTemplate.update("INSERT INTO admin(id, firstname, lastname) VALUES (?, ?, ?)",
-                adminId, "firstname", "lastname");
         // Insert a subject
         jdbcTemplate.update("INSERT INTO subject(subject_id) VALUES (?)",
                 DEFAULT_SUBJECT_ID);
@@ -94,38 +91,29 @@ class SectionsControllerIT  {
         assertEquals(1, count);
 
     }
-    private void insertAdmins() {
-        List<Object[]> admins = new ArrayList<>();
-        for (int i = 10; i <= 13; i++) {
-            admins.add(new Object[]{i, "firstname", "lastname"});
-        }
-        jdbcTemplate.batchUpdate("INSERT INTO admin(id, firstname, lastname) VALUES (?, ?, ?)", admins);
-    }
 
-    private void insertNewDefaultSection() {
-        final String roomName = "roomName";
-        jdbcTemplate.update("INSERT INTO room (name, capacity) VALUES (?, ?)", roomName, 20);
-        jdbcTemplate.update("INSERT INTO subject (subject_id) VALUES (?)", DEFAULT_SUBJECT_ID);
+    private void insertNewDefaultSection(String name) {
+        jdbcTemplate.update("INSERT INTO room (name, capacity) VALUES (?, ?)", name, 20);
+        jdbcTemplate.update("INSERT INTO subject (subject_id) VALUES (?)", name);
         jdbcTemplate.update(
-                "INSERT INTO section (section_id, number_of_students, days, start_time, end_time, room_name, subject_subject_id)" +
-                        " VALUES (?, ?, ?, ?, ?, ?, ?)",
-                DEFAULT_SECTION_ID, 0, Days.MTH.ordinal(), LocalTime.of(9, 0), LocalTime.of(10, 0), roomName, DEFAULT_SUBJECT_ID);
+                "INSERT INTO section (section_id, number_of_students, days, start_time, end_time, room_name, subject_subject_id, version)" +
+                        " VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+                name, 0, Days.MTH.ordinal(), LocalTime.of(9, 0), LocalTime.of(10, 0), name, name, 0);
     }
     @Test
     void concurrently_create_new_section() throws Exception {
-        final String DIFF_ID = "X";
-        insertAdmins();
-        insertNewDefaultSection();
-        startSectionCreationThread(DIFF_ID);
-        assertNumberOfSectionsCreated(DIFF_ID,1);
+        final String testId = "A";
+        insertNewDefaultSection(testId);
+        startSectionCreationThread(testId);
+        assertNumberOfSectionsCreated(testId,1);
     }
 
     @Test
     void concurrently_create_existing_section() throws Exception {
-        insertAdmins();                                                     //inserts a set of admins
-        insertNewDefaultSection();                                          //creates a new default section
-        startSectionCreationThread(DEFAULT_SECTION_ID);                     //start multi threads
-        assertNumberOfSectionsCreated(DEFAULT_SECTION_ID,1);    //check if multi threading was allowed by checking the number of sections created
+        final String testId = "B";
+        insertNewDefaultSection(testId);                                          //creates a new default section
+        startSectionCreationThread(testId);                     //start multi threads
+        assertNumberOfSectionsCreated(testId,1);    //check if multi threading was allowed by checking the number of sections created
     }
 
     private void assertNumberOfSectionsCreated(String sectionId,int expectedCount) {
@@ -137,7 +125,7 @@ class SectionsControllerIT  {
 
     private void startSectionCreationThread(String sectionId) throws Exception {
         CountDownLatch latch = new CountDownLatch(1);
-        for (int i = 10; i <= 13; i++) {
+        for (int i = 1; i <= 3; i++) {
             final int adminId = i;
             new SectionCreationThread(adminRepository.findById(adminId).orElseThrow(() ->
                     new NoSuchElementException("No such admin w/ id: " + adminId + " found in DB.")),
