@@ -12,9 +12,12 @@ import org.springframework.test.web.servlet.*;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.*;
 
+
 import java.time.*;
 import java.util.*;
+import java.util.concurrent.CountDownLatch;
 
+import static com.orangeandbronze.enlistment.domain.Days.MTH;
 import static com.orangeandbronze.enlistment.domain.Days.MTH;
 import static com.orangeandbronze.enlistment.domain.TestUtils.*;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -36,6 +39,8 @@ class SectionsControllerIT  {
     @Autowired
     private SectionRepository sectionRepository;
 
+    @Autowired
+    private AdminRepository adminRepository;
     private final static String TEST = "test";
 
     @Container
@@ -88,6 +93,86 @@ class SectionsControllerIT  {
 
         assertEquals(1, count);
 
+    }
+    private void insertAdmins() {
+        List<Object[]> admins = new ArrayList<>();
+        for (int i = 10; i <= 13; i++) {
+            admins.add(new Object[]{i, "firstname", "lastname"});
+        }
+        jdbcTemplate.batchUpdate("INSERT INTO admin(id, firstname, lastname) VALUES (?, ?, ?)", admins);
+    }
+
+    private void insertNewDefaultSection() {
+        final String roomName = "Y";
+        jdbcTemplate.update("INSERT INTO room (name, capacity) VALUES (?, ?)", roomName, 20);
+        jdbcTemplate.update("INSERT INTO subject (subject_id) VALUES (?)", DEFAULT_SUBJECT_ID);
+        jdbcTemplate.update(
+                "INSERT INTO section (section_id, number_of_students, days, start_time, end_time, room_name, subject_subject_id)" +
+                        " VALUES (?, ?, ?, ?, ?, ?, ?)",
+                DEFAULT_SECTION_ID, 0, Days.MTH.ordinal(), LocalTime.of(9, 0), LocalTime.of(10, 0), roomName, DEFAULT_SUBJECT_ID);
+    }
+    @Test
+    void concurrently_create_new_section() throws Exception {
+        final String DIFF_ID = "X";
+        insertAdmins();
+        insertNewDefaultSection();
+        startSectionCreationThread(DIFF_ID);
+        assertNumberOfSectionsCreated(DIFF_ID,1);
+    }
+
+    @Test
+    void concurrently_create_existing_section() throws Exception {
+        insertAdmins();                                                     //inserts a set of admins
+        insertNewDefaultSection();                                          //creates a new default section
+        startSectionCreationThread(DEFAULT_SECTION_ID);                     //start multi threads
+        assertNumberOfSectionsCreated(DEFAULT_SECTION_ID,1);    //check if multi threading was allowed by checking the number of sections created
+    }
+
+    private void assertNumberOfSectionsCreated(String sectionId,int expectedCount) {
+        int numSections = jdbcTemplate.queryForObject(
+                "SELECT COUNT(*) FROM section WHERE section_id = '" +
+                        sectionId + "'", Integer.class);
+        assertEquals(expectedCount, numSections);
+    }
+
+    private void startSectionCreationThread(String sectionId) throws Exception {
+        CountDownLatch latch = new CountDownLatch(1);
+        for (int i = 10; i <= 13; i++) {
+            final int adminId = i;
+            new SectionCreationThread(adminRepository.findById(adminId).orElseThrow(() ->
+                    new NoSuchElementException("No such admin w/ id: " + adminId + " found in DB.")),
+                    latch, mockMvc,sectionId).start();
+        }
+        latch.countDown();
+        Thread.sleep(5000); // wait time to allow all the threads to finish
+    }
+    private static class SectionCreationThread extends Thread {
+        private final Admin admin;
+        private final CountDownLatch latch;
+        private final MockMvc mockMvc;
+        private final String sectionId;
+
+        public SectionCreationThread(Admin admin, CountDownLatch latch, MockMvc mockMvc,String sectionId) {
+            this.admin = admin;
+            this.latch = latch;
+            this.mockMvc = mockMvc;
+            this.sectionId=sectionId;
+        }
+
+        @Override
+        public void run() {
+            final String roomName = "roomName";
+            try {
+                latch.await(); // The thread keeps waiting till it is informed
+                mockMvc.perform(post("/sections").sessionAttr("admin", admin)
+                        .param("sectionId", sectionId).param("subjectId", DEFAULT_SUBJECT_ID)
+                        .param("days", "MTH").param("start","08:30").param("end", "10:00")
+                        .param("roomName",roomName));
+
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
 
 }
