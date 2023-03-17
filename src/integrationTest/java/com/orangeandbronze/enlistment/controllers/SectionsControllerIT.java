@@ -37,9 +37,6 @@ class SectionsControllerIT  {
     private MockMvc mockMvc;
 
     @Autowired
-    private SectionRepository sectionRepository;
-
-    @Autowired
     private AdminRepository adminRepository;
     private final static String TEST = "test";
 
@@ -77,8 +74,11 @@ class SectionsControllerIT  {
         jdbcTemplate.update("INSERT INTO section(section_id, number_of_students, days, start_time, end_time, room_name, subject_subject_id) VALUES (?, ?, ?, ?, ?, ?, ?)",
                 DEFAULT_SECTION_ID, 0, MTH.ordinal(), LocalTime.of(8,0), LocalTime.of(9,0), roomName, DEFAULT_SUBJECT_ID);
 
+        Admin admin = adminRepository.findById(adminId).orElseThrow(() ->
+                new NoSuchElementException("No admin w/ admin id " + adminId + " found in DB."));
+
         // When: an admin creates a section
-        mockMvc.perform(post("/sections").sessionAttr("admin", adminId)
+        mockMvc.perform(post("/sections").sessionAttr("admin", admin)
                 .param("sectionId", DEFAULT_SECTION_ID)
                 .param("subjectId", DEFAULT_SUBJECT_ID)
                 .param("roomName", roomName)
