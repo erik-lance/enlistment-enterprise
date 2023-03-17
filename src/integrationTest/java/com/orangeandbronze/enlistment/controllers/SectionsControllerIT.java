@@ -103,7 +103,7 @@ class SectionsControllerIT  {
     }
 
     private void insertNewDefaultSection() {
-        final String roomName = "Y";
+        final String roomName = "roomName";
         jdbcTemplate.update("INSERT INTO room (name, capacity) VALUES (?, ?)", roomName, 20);
         jdbcTemplate.update("INSERT INTO subject (subject_id) VALUES (?)", DEFAULT_SUBJECT_ID);
         jdbcTemplate.update(
@@ -161,13 +161,12 @@ class SectionsControllerIT  {
 
         @Override
         public void run() {
-            final String roomName = "roomName";
             try {
                 latch.await(); // The thread keeps waiting till it is informed
                 mockMvc.perform(post("/sections").sessionAttr("admin", admin)
                         .param("sectionId", sectionId).param("subjectId", DEFAULT_SUBJECT_ID)
                         .param("days", "MTH").param("start","08:30").param("end", "10:00")
-                        .param("roomName",roomName));
+                        .param("roomName","roomName"));
 
             } catch (Exception e) {
                 throw new RuntimeException(e);
