@@ -34,24 +34,21 @@ class SectionsControllerTest {
         RoomRepository roomRepository = mock(RoomRepository.class);
         SubjectRepository subjectRepository = mock(SubjectRepository.class);
         RedirectAttributes redirectAttrs = mock(RedirectAttributes.class);
-
         SectionsController controller = new SectionsController();
-        // When the controller receives the arguments
 
+        // When the controller receives the arguments
         Room room = new Room(roomId, 10);
         when(roomRepository.findById(roomId)).thenReturn(Optional.of(room));
         Subject subject = new Subject(subjectId);
         when(subjectRepository.findById(subjectId)).thenReturn(Optional.of(subject));
         Schedule schedule = new Schedule(MTH, new Period(startTime, endTime));
-        Section section = new Section(sectionId, subject, schedule, room);
-        when(sectionRepository.save(section)).thenReturn(section);
 
+        Section section = new Section(sectionId, subject, schedule, room);
         room.removeSection(section);
 
         controller.setRoomRepo(roomRepository);
         controller.setSubjectRepo(subjectRepository);
         controller.setSectionRepo(sectionRepository);
-
 
         // Then
         // - it should retrieve the entities from the db, create a new section
