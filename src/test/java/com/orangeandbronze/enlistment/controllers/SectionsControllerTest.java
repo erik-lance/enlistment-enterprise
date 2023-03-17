@@ -20,7 +20,6 @@ class SectionsControllerTest {
     @Test
     void createSection_save_new_section_to_repository() {
         // Given the controller, repositories & valid parameter arguments for creating a section
-
         String roomId = "AS204";
         String sectionId = "SAM";
         String subjectId = "Psych101";
@@ -41,10 +40,8 @@ class SectionsControllerTest {
         when(roomRepository.findById(roomId)).thenReturn(Optional.of(room));
         Subject subject = new Subject(subjectId);
         when(subjectRepository.findById(subjectId)).thenReturn(Optional.of(subject));
-        Schedule schedule = new Schedule(MTH, new Period(startTime, endTime));
 
-        Section section = new Section(sectionId, subject, schedule, room);
-        room.removeSection(section);
+        Section section = new Section(sectionId, subject, MTH830to10, room);
 
         controller.setRoomRepo(roomRepository);
         controller.setSubjectRepo(subjectRepository);

@@ -77,8 +77,4 @@ public class Room {
         capacity = -1;
     }
 
-    public void removeSection(Section section) {
-        notNull(section);
-        sections.remove(section);
-    }
 }
