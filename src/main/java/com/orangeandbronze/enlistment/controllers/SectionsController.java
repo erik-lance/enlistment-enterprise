@@ -26,6 +26,8 @@ class SectionsController {
     private RoomRepository roomRepo;
     @Autowired
     private SectionRepository sectionRepo;
+    @Autowired
+    private FacultyRepository facultyRepo;
 
     @ModelAttribute("admin")
     public Admin admin(Integer id) {
@@ -40,13 +42,14 @@ class SectionsController {
         model.addAttribute("subjects", subjectRepo.findAll());
         model.addAttribute("rooms", roomRepo.findAll());
         model.addAttribute("sections", sectionRepo.findAll());
+        model.addAttribute("instructors", facultyRepo.findAll());
         return "sections";
     }
 
     @PostMapping
     public String createSection(@RequestParam String sectionId, @RequestParam String subjectId, @RequestParam Days days,
                                 @RequestParam String start, @RequestParam String end, @RequestParam String roomName,
-                                RedirectAttributes redirectAttrs){
+                                @RequestParam int facultyNumber, RedirectAttributes redirectAttrs){
         notNull(sectionId);
         notNull(subjectId);
         notNull(days);
@@ -62,7 +65,9 @@ class SectionsController {
         Room room = roomRepo.findById(roomName).orElseThrow(() -> new NoSuchElementException("no room found for roomName " + roomName));
         Period period = new Period(LocalTime.parse(start), LocalTime.parse(end));
         Schedule schedule = new Schedule(days, period);
-        Section section = new Section(sectionId, subject, schedule, room);
+        Faculty instructor = facultyRepo.findById(facultyNumber).orElseThrow(() -> new NoSuchElementException("no faculty found for facultyNumber " + facultyNumber));
+
+        Section section = new Section(sectionId, subject, schedule, room, instructor);
 
         sectionRepo.save(section);
         redirectAttrs.addFlashAttribute("sectionSuccessMessage", "Successfully created new section " + sectionId);
@@ -92,6 +97,8 @@ class SectionsController {
         this.adminRepo = adminRepo;
     }
 
-
+    void setFacultyRepo(FacultyRepository facultyRepo) {
+        this.facultyRepo = facultyRepo;
+    }
 
 }

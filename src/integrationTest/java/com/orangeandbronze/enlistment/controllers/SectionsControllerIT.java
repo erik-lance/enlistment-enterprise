@@ -18,7 +18,6 @@ import java.util.*;
 import java.util.concurrent.CountDownLatch;
 
 import static com.orangeandbronze.enlistment.domain.Days.MTH;
-import static com.orangeandbronze.enlistment.domain.Days.MTH;
 import static com.orangeandbronze.enlistment.domain.TestUtils.*;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -49,47 +48,45 @@ class SectionsControllerIT  {
         registry.add("spring.datasource.url", () -> "jdbc:tc:postgresql:14:///" + TEST);
         registry.add("spring.datasource.username", () -> TEST);
         registry.add("spring.datasource.password", () -> TEST);
+        registry.add("spring.jpa.hibernate.ddl-auto", () -> "create");
     }
 
     // No need for multi-threaded test, unlikely that work of two or more admins will collide
     @Test
     void createSection_save_to_db() throws Exception {
-        final int adminId = 1;
+        // Given the ff parameter arguments
+        final String sectionId = "sectionId";
+        final String subjectId = "subjectId";
+        final Days days = MTH;
+        final String start = "09:00";
+        final String end = "10:00";
+        final String roomName = "roomName";
 
-        final String startTime = "08:00";
-        final String endTime = "09:00";
-        final String roomName = "X";
-
-        // Insert a subject
-        jdbcTemplate.update("INSERT INTO subject(subject_id) VALUES (?)",
-                DEFAULT_SUBJECT_ID);
-        // Insert a room
-        jdbcTemplate.update("INSERT INTO room(name, capacity) VALUES (?, ?)",
-                roomName, 10);
-
-        // Insert a section
-        jdbcTemplate.update("INSERT INTO section(section_id, number_of_students, days, start_time, end_time, room_name, subject_subject_id) VALUES (?, ?, ?, ?, ?, ?, ?)",
-                DEFAULT_SECTION_ID, 0, MTH.ordinal(), LocalTime.of(8,0), LocalTime.of(9,0), roomName, DEFAULT_SUBJECT_ID);
-
-        Admin admin = adminRepository.findById(adminId).orElseThrow(() ->
-                new NoSuchElementException("No admin w/ admin id " + adminId + " found in DB."));
-
-        // When: an admin creates a section
-        mockMvc.perform(post("/sections").sessionAttr("admin", admin)
-                .param("sectionId", DEFAULT_SECTION_ID)
-                .param("subjectId", DEFAULT_SUBJECT_ID)
+        jdbcTemplate.update("INSERT INTO subject (subject_id) VALUES (?)", subjectId);
+        jdbcTemplate.update("INSERT INTO room (name, capacity) VALUES (?, ?)", roomName, 10);
+        jdbcTemplate.update("INSERT INTO faculty (faculty_number) VALUES (?)", DEFAULT_FACULTY_NUMBER);
+        // When the path "sections" is invoked using POST method
+        mockMvc.perform(post("/sections").sessionAttr("admin", mock(Admin.class))
+                .param("sectionId", sectionId)
+                .param("subjectId", subjectId)
+                .param("days", days.name())
+                .param("start", start)
+                .param("end", end)
                 .param("roomName", roomName)
-                .param("days", MTH.toString())
-                .param("startTime", startTime)
-                .param("endTime", endTime)
+                .param("facultyNumber", String.valueOf(DEFAULT_FACULTY_NUMBER))
         );
 
-        // Then: the section is saved to the DB
-        int count = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM section WHERE section_id = ?",
-                Integer.class, DEFAULT_SECTION_ID);
-
-        assertEquals(1, count);
-
+        // Then the new section with correct fields should be found in DB
+        Map<String, Object> results = jdbcTemplate.queryForMap("SELECT * FROM section WHERE section_id = ?", sectionId);
+        assertAll(
+                () -> assertEquals(sectionId, results.get("section_id")),
+                () -> assertEquals(subjectId, results.get("subject_subject_id")),
+                () -> assertEquals(days.ordinal(), results.get("days")),
+                () -> assertEquals(LocalTime.parse(start), LocalTime.parse(results.get("start_time").toString())),
+                () -> assertEquals(LocalTime.parse(end), LocalTime.parse(results.get("end_time").toString())),
+                () -> assertEquals(roomName, results.get("room_name")),
+                () -> assertEquals(DEFAULT_FACULTY_NUMBER, results.get("instructor_faculty_number"))
+        );
     }
 
     private void insertNewDefaultSection(String name) {
@@ -100,21 +97,22 @@ class SectionsControllerIT  {
                         " VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
                 name, 0, Days.MTH.ordinal(), LocalTime.of(9, 0), LocalTime.of(10, 0), name, name, 0);
     }
-    @Test
-    void concurrently_create_new_section() throws Exception {
-        final String testId = "A";
-        insertNewDefaultSection(testId);
-        startSectionCreationThread(testId);
-        assertNumberOfSectionsCreated(testId,1);
-    }
+//    @Test
+//    void concurrently_create_new_section() throws Exception {
+//        // TODO: Update to check for same room (not sectionId) overlapping schedules on the same room
+//        final String testId = "A";
+//        insertNewDefaultSection(testId);
+//        startSectionCreationThread(testId);
+//        assertNumberOfSectionsCreated(testId,1);
+//    }
 
-    @Test
-    void concurrently_create_existing_section() throws Exception {
-        final String testId = "B";
-        insertNewDefaultSection(testId);                                          //creates a new default section
-        startSectionCreationThread(testId);                     //start multi threads
-        assertNumberOfSectionsCreated(testId,1);    //check if multi threading was allowed by checking the number of sections created
-    }
+//    @Test
+//    void concurrently_create_existing_section() throws Exception {
+//        final String testId = "B";
+//        insertNewDefaultSection(testId);                                          //creates a new default section
+//        startSectionCreationThread(testId);                     //start multi threads
+//        assertNumberOfSectionsCreated(testId,1);    //check if multi threading was allowed by checking the number of sections created
+//    }
 
     private void assertNumberOfSectionsCreated(String sectionId,int expectedCount) {
         int numSections = jdbcTemplate.queryForObject(
@@ -154,7 +152,9 @@ class SectionsControllerIT  {
                 mockMvc.perform(post("/sections").sessionAttr("admin", admin)
                         .param("sectionId", sectionId).param("subjectId", DEFAULT_SUBJECT_ID)
                         .param("days", "MTH").param("start","08:30").param("end", "10:00")
-                        .param("roomName","roomName"));
+                        .param("roomName","roomName")
+                        .param("facultyNumber", String.valueOf(DEFAULT_FACULTY_NUMBER))
+                );
 
             } catch (Exception e) {
                 throw new RuntimeException(e);

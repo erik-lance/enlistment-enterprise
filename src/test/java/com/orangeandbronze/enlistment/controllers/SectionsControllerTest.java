@@ -32,6 +32,7 @@ class SectionsControllerTest {
         SectionRepository sectionRepository = mock(SectionRepository.class);
         RoomRepository roomRepository = mock(RoomRepository.class);
         SubjectRepository subjectRepository = mock(SubjectRepository.class);
+        FacultyRepository facultyRepository = mock(FacultyRepository.class);
         RedirectAttributes redirectAttrs = mock(RedirectAttributes.class);
         SectionsController controller = new SectionsController();
 
@@ -41,15 +42,18 @@ class SectionsControllerTest {
         Subject subject = new Subject(subjectId);
         when(subjectRepository.findById(subjectId)).thenReturn(Optional.of(subject));
 
-        Section section = new Section(sectionId, subject, MTH830to10, room);
+        when(facultyRepository.findById(DEFAULT_FACULTY_NUMBER)).thenReturn(Optional.of(DEFAULT_FACULTY));
+
+        Section section = new Section(sectionId, subject, MTH830to10, room, DEFAULT_FACULTY);
 
         controller.setRoomRepo(roomRepository);
         controller.setSubjectRepo(subjectRepository);
         controller.setSectionRepo(sectionRepository);
+        controller.setFacultyRepo(facultyRepository);
 
         // Then
         // - it should retrieve the entities from the db, create a new section
-        String returnVal = controller.createSection(sectionId, subjectId, MTH, start,end, roomId, redirectAttrs);
+        String returnVal = controller.createSection(sectionId, subjectId, MTH, start,end, roomId, DEFAULT_FACULTY_NUMBER, redirectAttrs);
         // - save the section in the db
         verify(sectionRepository).save(section);
         // - set a flash attribute called "sectionSuccessMessage" with the message "Successfully created new section " + sectionId
