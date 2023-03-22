@@ -70,5 +70,21 @@ CREATE TABLE public.faculty (faculty_number INTEGER NOT NULL, CONSTRAINT "facult
 ALTER TABLE public.section ADD instructor_faculty_number INTEGER;
 
 -- changeset dacks:1679244450727-3
+--validCheckSum: any
 ALTER TABLE public.section ADD CONSTRAINT "FKhbrcxeiyot9gwvpjd9klgc0rw" FOREIGN KEY (instructor_faculty_number) REFERENCES public.faculty (faculty_number);
 
+-- liquibase formatted sql
+
+-- changeset gianm:1679492914670-2
+CREATE TABLE public.faculty (faculty_number INTEGER NOT NULL, CONSTRAINT "facultyPK" PRIMARY KEY (faculty_number));
+
+-- changeset gianm:1679492914670-3
+CREATE TABLE public.faculty_sections (faculty_faculty_number INTEGER NOT NULL, sections_section_id VARCHAR(255) NOT NULL);
+-- changeset gianm:1679492914670-12
+ALTER TABLE public.faculty_sections ADD CONSTRAINT "UK_2ce4o3g0a4rl929cbewtmmu1y" UNIQUE (sections_section_id);
+
+-- changeset gianm:1679492914670-15
+ALTER TABLE public.faculty_sections ADD CONSTRAINT "FK2j11yqgbi4wdcyov12kgr5xy0" FOREIGN KEY (sections_section_id) REFERENCES public.section (section_id);
+
+-- changeset gianm:1679492914670-16
+ALTER TABLE public.faculty_sections ADD CONSTRAINT "FK656uje4ggsa8h9sqf9yfji4n" FOREIGN KEY (faculty_faculty_number) REFERENCES public.faculty (faculty_number);
