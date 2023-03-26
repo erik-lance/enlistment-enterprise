@@ -14,10 +14,10 @@ public class TestUtils {
     public static final Subject DEFAULT_SUBJECT = new Subject(DEFAULT_SUBJECT_ID);
     public static final int DEFAULT_STUDENT_NUMBER = 10;
     public static final int DEFAULT_FACULTY_NUMBER = 1000;
-    public static final Faculty DEFAULT_FACULTY = new Faculty(DEFAULT_FACULTY_NUMBER);
+    public static final Faculty DEFAULT_FACULTY = new Faculty(DEFAULT_FACULTY_NUMBER, "lastname", "firstname");
 
     public static Faculty newFaculty(int facultyNumber) {
-        return new Faculty(facultyNumber);
+        return new Faculty(facultyNumber, "lastname", "firstname");
     }
 
     public static Student newStudent(int studentNumber, Collection<Section> sections, Collection<Subject> subjectsTaken) {

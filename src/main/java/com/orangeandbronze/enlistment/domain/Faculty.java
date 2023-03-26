@@ -13,11 +13,18 @@ import static org.apache.commons.lang3.Validate.*;
 public class Faculty {
     @Id
     private final int facultyNumber;
+    private String lastName;
+    private String firstName;
     @OneToMany
     private final Collection<Section> sections = new HashSet<>();
-    Faculty(int facultyNumber) {
+    Faculty(int facultyNumber, String lastName, String firstName) {
         isTrue(facultyNumber >= 0, "faculty number must be non-negative, was: "+facultyNumber);
         this.facultyNumber = facultyNumber;
+
+        isTrue(lastName.length() > 0, "faculty's surname must not be empty");
+        this.lastName = lastName;
+        isTrue(firstName.length() > 0, "faculty's first name must not be empty");
+        this.firstName = firstName;
     }
 
     public void addSection(Section section) {
@@ -31,7 +38,7 @@ public class Faculty {
     }
     @Override
     public String toString() {
-        return "Faculty# " + facultyNumber;
+        return "Faculty# " + facultyNumber + "; Name: " + lastName + ", " + firstName;
     }
 
     @Override
@@ -46,6 +53,8 @@ public class Faculty {
     public int getFacultyNumber() {
         return facultyNumber;
     }
+//    public String getFacultyLastName() { return lastName; }
+//    public String getFacultyFirstName() { return firstName; }
 
     @Override
     public int hashCode() {
