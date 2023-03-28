@@ -7,6 +7,7 @@ import static com.orangeandbronze.enlistment.domain.Days.*;
 
 public class TestUtils {
     public static final Schedule MTH830to10 = new Schedule(MTH, new Period(LocalTime.of(8, 30), LocalTime.of(10, 0)));
+	public static final Schedule MTH9to1030 = new Schedule(MTH, new Period(LocalTime.of(9, 0), LocalTime.of(10, 30)));
     public static final Schedule TF830to10 = new Schedule(TF, new Period(LocalTime.of(8, 30), LocalTime.of(10, 0)));
     public static final Schedule TF10to1130 = new Schedule(TF, new Period(LocalTime.of(10, 0), LocalTime.of(11, 30)));
     public static final String DEFAULT_SECTION_ID = "DefaultSection";

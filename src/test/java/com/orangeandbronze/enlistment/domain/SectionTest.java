@@ -21,4 +21,10 @@ class SectionTest {
         assertThrows(ScheduleConflictException.class, () -> new Section("B", DEFAULT_SUBJECT, MTH830to10, room, newFaculty(2)));
     }
 
+	@Test
+	void newSection_same_room_overlap_sked() {
+		Room room = new Room("X", 10);
+        new Section("A", DEFAULT_SUBJECT, MTH830to10, room, newFaculty(1));
+		assertThrows(ScheduleConflictException.class, () -> new Section("B", DEFAULT_SUBJECT, MTH9to1030, room, DEFAULT_FACULTY));
+	}
 }
