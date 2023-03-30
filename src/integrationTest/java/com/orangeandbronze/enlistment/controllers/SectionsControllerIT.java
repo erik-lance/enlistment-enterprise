@@ -106,14 +106,40 @@ class SectionsControllerIT  {
 //        assertNumberOfSectionsCreated(testId,1);
 //    }
 
-//    @Test
-//    void concurrently_create_existing_section() throws Exception {
-//        final String testId = "B";
-//        insertNewDefaultSection(testId);                                          //creates a new default section
-//        startSectionCreationThread(testId);                     //start multi threads
-//        assertNumberOfSectionsCreated(testId,1);    //check if multi threading was allowed by checking the number of sections created
-//    }
+    @Test
+    void concurrently_create_existing_section() throws Exception {
+        final String testId = "B";
+        insertNewDefaultSection(testId);                                          //creates a new default section
+        startSectionCreationThread(testId);                     //start multi threads
+        assertNumberOfSectionsCreated(testId,1);    //check if multi threading was allowed by checking the number of sections created
+   }
+    @Test
+    void concurrently_create_overlapping_section() throws Exception {
+        final String test1 = "D";
+        final String test2 = "E";
+        createOverlappingSections(test1,test2);
+                                                  //creates a new default section
+        startSectionCreationThread(test1);                     //start multi threads
+        startSectionCreationThread(test2);
+        assertNumberOfSectionsCreated(Days.MTH,"09:00", "11:00",1);    //check if multi threading was allowed by checking the number of sections created
+    }
+    private void createOverlappingSections(String test1, String test2){
+        jdbcTemplate.update(
+                "INSERT INTO section (section_id, number_of_students, days, start_time, end_time, room_name, subject_subject_id, version)" +
+                        " VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+                test1, 0, Days.MTH.ordinal(), LocalTime.of(10, 0), LocalTime.of(11, 0), "room1", "id", 0);
+        jdbcTemplate.update(
+                "INSERT INTO section (section_id, number_of_students, days, start_time, end_time, room_name, subject_subject_id, version)" +
+                        " VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+                test2, 0, Days.MTH.ordinal(), LocalTime.of(9, 0), LocalTime.of(11, 0), "room2", "id", 0);
 
+    }
+    private void assertNumberOfSectionsCreated(Days days, String start, String end, int expectedCount){
+        int numSections = jdbcTemplate.queryForObject(
+                "SELECT COUNT(*) FROM section WHERE (start_time >= " +
+                        start + ") AND (end_time<=" + end + ")", Integer.class);
+        assertEquals(expectedCount, numSections);
+    }
     private void assertNumberOfSectionsCreated(String sectionId,int expectedCount) {
         int numSections = jdbcTemplate.queryForObject(
                 "SELECT COUNT(*) FROM section WHERE section_id = '" +
