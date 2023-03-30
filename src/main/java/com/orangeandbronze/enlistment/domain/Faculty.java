@@ -13,8 +13,8 @@ import static org.apache.commons.lang3.Validate.*;
 public class Faculty {
     @Id
     private final int facultyNumber;
-    private String lastName;
-    private String firstName;
+    private String lastname;
+    private String firstname;
     @OneToMany
     private final Collection<Section> sections = new HashSet<>();
     Faculty(int facultyNumber, String lastName, String firstName) {
@@ -22,9 +22,9 @@ public class Faculty {
         this.facultyNumber = facultyNumber;
 
         isTrue(lastName.length() > 0, "faculty's surname must not be empty");
-        this.lastName = lastName;
+        this.lastname = lastName;
         isTrue(firstName.length() > 0, "faculty's first name must not be empty");
-        this.firstName = firstName;
+        this.firstname = firstName;
     }
 
     public void addSection(Section section) {
@@ -38,7 +38,7 @@ public class Faculty {
     }
     @Override
     public String toString() {
-        return "Faculty# " + facultyNumber + "; Name: " + lastName + ", " + firstName;
+        return "Faculty# " + facultyNumber + "; Name: " + lastname + ", " + firstname;
     }
 
     @Override
@@ -64,5 +64,7 @@ public class Faculty {
     /* Do not call! For JPA only! */
     private Faculty() {
         facultyNumber = -1;
+        this.firstname = null;
+        this.lastname = null;
     }
 }

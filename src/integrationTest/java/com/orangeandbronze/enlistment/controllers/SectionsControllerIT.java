@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.*;
 import org.springframework.boot.test.autoconfigure.web.servlet.*;
 import org.springframework.boot.test.context.*;
 import org.springframework.jdbc.core.*;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.web.servlet.*;
@@ -25,12 +26,15 @@ import static org.mockito.Mockito.mock;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
 @AutoConfigureMockMvc
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 @Testcontainers
 @SpringBootTest
 class SectionsControllerIT  extends AbstractControllerIT {
 
     @Autowired
     private AdminRepository adminRepository;
+    @Autowired
+    private FacultyRepository facultyRepository;
 
     // No need for multi-threaded test, unlikely that work of two or more admins will collide
     @Test
@@ -70,64 +74,45 @@ class SectionsControllerIT  extends AbstractControllerIT {
         );
     }
 
-    private void insertNewDefaultSection(String name) {
-        jdbcTemplate.update("INSERT INTO room (name, capacity) VALUES (?, ?)", name, 20);
-        jdbcTemplate.update("INSERT INTO subject (subject_id) VALUES (?)", name);
-        jdbcTemplate.update(
-                "INSERT INTO section (section_id, number_of_students, days, start_time, end_time, room_name, subject_subject_id, version)" +
-                        " VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
-                name, 0, Days.MTH.ordinal(), LocalTime.of(9, 0), LocalTime.of(10, 0), name, name, 0);
-    }
-
     @Test
     void concurrently_create_overlapping_section() throws Exception {
-        final String test1 = "D";
-        final String test2 = "E";
-        createOverlappingSections(test1,test2);
-                                                  //creates a new default section
-        startSectionCreationThread(test1);                     //start multi threads
-        startSectionCreationThread(test2);
-        assertNumberOfSectionsCreated(Days.MTH,"09:00", "11:00",1);    //check if multi threading was allowed by checking the number of sections created
+        jdbcTemplate.update("INSERT INTO room (name, capacity) VALUES (?, ?)", "roomName", 20);
+        jdbcTemplate.update("INSERT INTO subject (subject_id) VALUES (?)", DEFAULT_SUBJECT_ID);
+        startSectionCreationThreads();                     //start multi threads
+        assertNumberOfSectionsCreated(3);    //check if multi threading was allowed by checking the number of sections created
     }
-    private void createOverlappingSections(String test1, String test2){
-        jdbcTemplate.update("INSERT INTO room (name, capacity) VALUES (?, ?)", "room1", 20);
-        jdbcTemplate.update("INSERT INTO room (name, capacity) VALUES (?, ?)", "room2", 20);
-        jdbcTemplate.update(
-                "INSERT INTO section (section_id, number_of_students, days, start_time, end_time, room_name, subject_subject_id, version)" +
-                        " VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
-                test1, 0, Days.MTH.ordinal(), LocalTime.of(10, 0), LocalTime.of(11, 0), "room1", "id", 0);
-        jdbcTemplate.update(
-                "INSERT INTO section (section_id, number_of_students, days, start_time, end_time, room_name, subject_subject_id, version)" +
-                        " VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
-                test2, 0, Days.MTH.ordinal(), LocalTime.of(9, 0), LocalTime.of(11, 0), "room2", "id", 0);
 
-    }
-    private void assertNumberOfSectionsCreated(Days days, String start, String end, int expectedCount){
+    private void assertNumberOfSectionsCreated(int expectedCount){
         int numSections = jdbcTemplate.queryForObject(
-                "SELECT COUNT(*) FROM section WHERE (start_time >= " +
-                        start + ") AND (end_time<=" + end + ")", Integer.class);
+                "SELECT COUNT(*) FROM room_sections WHERE room_name = 'roomName'", Integer.class);
         assertEquals(expectedCount, numSections);
     }
 
-    private void startSectionCreationThread(String sectionId) throws Exception {
+    private void startSectionCreationThreads() throws Exception {
         CountDownLatch latch = new CountDownLatch(1);
         for (int i = 1; i <= 3; i++) {
-            final int adminId = i;
-            new SectionCreationThread(adminRepository.findById(adminId).orElseThrow(() ->
-                    new NoSuchElementException("No such admin w/ id: " + adminId + " found in DB.")),
-                    latch, mockMvc,sectionId).start();
+            final int id = i;
+            new SectionCreationThread(
+                    adminRepository.findById(id).orElseThrow(() ->
+                        new NoSuchElementException("No such admin w/ id: " + id + " found in DB.")),
+                    facultyRepository.findById(id).orElseThrow(() ->
+                        new NoSuchElementException("No such faculty w/ id: " + id + " found in DB.")),
+                    latch, mockMvc,Integer.toString(i)).start();
         }
         latch.countDown();
         Thread.sleep(5000); // wait time to allow all the threads to finish
     }
     private static class SectionCreationThread extends Thread {
         private final Admin admin;
+        private final Faculty faculty;
         private final CountDownLatch latch;
         private final MockMvc mockMvc;
         private final String sectionId;
 
-        public SectionCreationThread(Admin admin, CountDownLatch latch, MockMvc mockMvc,String sectionId) {
+
+        public SectionCreationThread(Admin admin, Faculty faculty, CountDownLatch latch, MockMvc mockMvc,String sectionId) {
             this.admin = admin;
+            this.faculty = faculty;
             this.latch = latch;
             this.mockMvc = mockMvc;
             this.sectionId=sectionId;
@@ -139,9 +124,11 @@ class SectionsControllerIT  extends AbstractControllerIT {
                 latch.await(); // The thread keeps waiting till it is informed
                 mockMvc.perform(post("/sections").sessionAttr("admin", admin)
                         .param("sectionId", sectionId).param("subjectId", DEFAULT_SUBJECT_ID)
-                        .param("days", "MTH").param("start","08:30").param("end", "10:00")
+                        .param("days", "MTH")
+                        .param("start","09:00")
+                        .param("end", "11:00")
                         .param("roomName","roomName")
-                        .param("facultyNumber", String.valueOf(DEFAULT_FACULTY_NUMBER))
+                        .param("facultyNumber", String.valueOf(faculty.getFacultyNumber()))
                 );
 
             } catch (Exception e) {
