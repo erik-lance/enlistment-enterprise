@@ -90,6 +90,8 @@ class SectionsControllerIT  extends AbstractControllerIT {
         assertNumberOfSectionsCreated(Days.MTH,"09:00", "11:00",1);    //check if multi threading was allowed by checking the number of sections created
     }
     private void createOverlappingSections(String test1, String test2){
+        jdbcTemplate.update("INSERT INTO room (name, capacity) VALUES (?, ?)", "room1", 20);
+        jdbcTemplate.update("INSERT INTO room (name, capacity) VALUES (?, ?)", "room2", 20);
         jdbcTemplate.update(
                 "INSERT INTO section (section_id, number_of_students, days, start_time, end_time, room_name, subject_subject_id, version)" +
                         " VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
