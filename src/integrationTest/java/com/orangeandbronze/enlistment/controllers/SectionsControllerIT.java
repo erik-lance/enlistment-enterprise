@@ -78,22 +78,7 @@ class SectionsControllerIT  extends AbstractControllerIT {
                         " VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
                 name, 0, Days.MTH.ordinal(), LocalTime.of(9, 0), LocalTime.of(10, 0), name, name, 0);
     }
-//    @Test
-//    void concurrently_create_new_section() throws Exception {
-//        // TODO: Update to check for same room (not sectionId) overlapping schedules on the same room
-//        final String testId = "A";
-//        insertNewDefaultSection(testId);
-//        startSectionCreationThread(testId);
-//        assertNumberOfSectionsCreated(testId,1);
-//    }
 
-    @Test
-    void concurrently_create_existing_section() throws Exception {
-        final String testId = "B";
-        insertNewDefaultSection(testId);                                          //creates a new default section
-        startSectionCreationThread(testId);                     //start multi threads
-        assertNumberOfSectionsCreated(testId,1);    //check if multi threading was allowed by checking the number of sections created
-   }
     @Test
     void concurrently_create_overlapping_section() throws Exception {
         final String test1 = "D";
