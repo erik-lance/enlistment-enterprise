@@ -27,29 +27,10 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 @AutoConfigureMockMvc
 @Testcontainers
 @SpringBootTest
-class SectionsControllerIT  {
-
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
-
-    @Autowired
-    private MockMvc mockMvc;
+class SectionsControllerIT  extends AbstractControllerIT {
 
     @Autowired
     private AdminRepository adminRepository;
-    private final static String TEST = "test";
-
-    @Container
-    private final PostgreSQLContainer container = new PostgreSQLContainer("postgres:14")
-            .withDatabaseName(TEST).withUsername(TEST).withPassword(TEST);
-
-    @DynamicPropertySource
-    private static void properties(DynamicPropertyRegistry registry) {
-        registry.add("spring.datasource.url", () -> "jdbc:tc:postgresql:14:///" + TEST);
-        registry.add("spring.datasource.username", () -> TEST);
-        registry.add("spring.datasource.password", () -> TEST);
-        registry.add("spring.jpa.hibernate.ddl-auto", () -> "create");
-    }
 
     // No need for multi-threaded test, unlikely that work of two or more admins will collide
     @Test

@@ -28,30 +28,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 @AutoConfigureMockMvc
 @SpringBootTest
-class EnlistControllerIT {
-
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
-
-    @Autowired
-    private MockMvc mockMvc;
-
+class EnlistControllerIT extends AbstractControllerIT {
     @Autowired
     private StudentRepository studentRepository;
-
-    private final static String TEST = "test";
-
-    @Container
-    private final PostgreSQLContainer container = new PostgreSQLContainer("postgres:14")
-            .withDatabaseName(TEST).withUsername(TEST).withPassword(TEST);
-
-    @DynamicPropertySource
-    private static void properties(DynamicPropertyRegistry registry) {
-        registry.add("spring.datasource.url", () -> "jdbc:tc:postgresql:14:///" + TEST);
-        registry.add("spring.datasource.username", () -> TEST);
-        registry.add("spring.datasource.password", () -> TEST);
-        registry.add("spring.jpa.hibernate.ddl-auto", () -> "create");
-    }
 
     @Test
     void enlist_student_in_section() throws Exception {
