@@ -106,12 +106,6 @@ class SectionsControllerIT  extends AbstractControllerIT {
                         start + ") AND (end_time<=" + end + ")", Integer.class);
         assertEquals(expectedCount, numSections);
     }
-    private void assertNumberOfSectionsCreated(String sectionId,int expectedCount) {
-        int numSections = jdbcTemplate.queryForObject(
-                "SELECT COUNT(*) FROM section WHERE section_id = '" +
-                        sectionId + "'", Integer.class);
-        assertEquals(expectedCount, numSections);
-    }
 
     private void startSectionCreationThread(String sectionId) throws Exception {
         CountDownLatch latch = new CountDownLatch(1);
