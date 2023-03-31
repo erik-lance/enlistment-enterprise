@@ -13,8 +13,8 @@ import static org.apache.commons.lang3.Validate.*;
 public class Faculty {
     @Id
     private final int facultyNumber;
-    private final String lastname;
-    private final String firstname;
+    public final String lastname;
+    public final String firstname;
     @OneToMany
     private final Collection<Section> sections = new HashSet<>();
     Faculty(int facultyNumber, String lastName, String firstName) {
